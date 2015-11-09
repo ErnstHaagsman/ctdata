@@ -1,5 +1,11 @@
 subprojects {
 	apply plugin: "java"
+
+	group 'net.ctdata'
+	version '1.0-SNAPSHOT'
+
+	sourceCompatibility = 1.7
+
 	repositories {
 		mavenCentral()
 	}
