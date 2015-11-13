@@ -33,5 +33,10 @@ abstract class AbstractQueueListener<T> implements QueueListener {
         }
     }
 
+    /**
+     * The method which should be overridden in the client code
+     *
+     * @param message The message, deserialized from JSON. Subtype of {@link AbstractMessage}
+     */
     public abstract void HandleMessage(T message);
 }
