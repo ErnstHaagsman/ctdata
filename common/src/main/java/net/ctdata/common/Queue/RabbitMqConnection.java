@@ -3,6 +3,9 @@ package net.ctdata.common.Queue;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeoutException;
 
 public class RabbitMqConnection implements QueueConnection {
@@ -43,9 +46,9 @@ public class RabbitMqConnection implements QueueConnection {
         }
     }
 
-    public RabbitMqConnection() throws IOException, TimeoutException {
+    public RabbitMqConnection(String uri) throws IOException, TimeoutException, NoSuchAlgorithmException, KeyManagementException, URISyntaxException {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setUri(uri);
         connection = factory.newConnection();
 
         sender = new MessageSender(connection, EXCHANGE_NAME);
