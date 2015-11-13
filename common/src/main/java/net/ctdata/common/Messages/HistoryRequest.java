@@ -1,6 +1,7 @@
 package net.ctdata.common.Messages;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.ctdata.common.Messages.Abstract.SensorMessage;
 import net.ctdata.common.Queue.Message;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Interval;

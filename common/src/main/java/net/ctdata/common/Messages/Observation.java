@@ -1,10 +1,9 @@
 package net.ctdata.common.Messages;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.ctdata.common.Messages.Abstract.SensorMessage;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-
-import java.util.UUID;
 
 public class Observation extends SensorMessage {
 

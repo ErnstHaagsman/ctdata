@@ -1,7 +1,5 @@
-package net.ctdata.common.Queue;
+package net.ctdata.common.Queue.Listeners;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
 import net.ctdata.common.Messages.HistoryResponse;
 
 import java.util.UUID;

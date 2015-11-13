@@ -1,11 +1,11 @@
-package net.ctdata.common.Queue;
+package net.ctdata.common.Queue.Listeners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import net.ctdata.common.Messages.AbstractMessage;
-import net.ctdata.common.Messages.HistoryResponse;
+import net.ctdata.common.Messages.Abstract.AbstractMessage;
+import net.ctdata.common.Queue.Message;
+import net.ctdata.common.Queue.QueueListener;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.TimeZone;
 
 abstract class AbstractQueueListener<T> implements QueueListener {

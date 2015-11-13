@@ -2,8 +2,7 @@ package net.ctdata.common.TestUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import net.ctdata.common.Messages.AbstractMessage;
-import net.ctdata.common.Messages.SensorMessage;
+import net.ctdata.common.Messages.Abstract.AbstractMessage;
 
 import java.io.IOException;
 import java.util.TimeZone;

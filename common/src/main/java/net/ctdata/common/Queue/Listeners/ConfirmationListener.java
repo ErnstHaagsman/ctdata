@@ -1,4 +1,4 @@
-package net.ctdata.common.Queue;
+package net.ctdata.common.Queue.Listeners;
 
 import net.ctdata.common.Messages.Confirmation;
 

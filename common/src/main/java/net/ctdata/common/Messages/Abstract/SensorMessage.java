@@ -1,4 +1,6 @@
-package net.ctdata.common.Messages;
+package net.ctdata.common.Messages.Abstract;
+
+import net.ctdata.common.Messages.Observation;
 
 public class SensorMessage extends RaspberryMessage {
 

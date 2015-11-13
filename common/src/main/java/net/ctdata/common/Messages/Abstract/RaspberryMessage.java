@@ -1,4 +1,4 @@
-package net.ctdata.common.Messages;
+package net.ctdata.common.Messages.Abstract;
 
 import java.util.UUID;
 

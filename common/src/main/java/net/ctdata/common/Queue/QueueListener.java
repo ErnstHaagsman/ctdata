@@ -1,7 +1,5 @@
 package net.ctdata.common.Queue;
 
-import net.ctdata.common.Messages.AbstractMessage;
-
 public interface QueueListener {
     /**
      * The RabbitMQ binding that this listener listens to
