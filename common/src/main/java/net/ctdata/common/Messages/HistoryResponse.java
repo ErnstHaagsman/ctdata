@@ -1,11 +1,29 @@
 package net.ctdata.common.Messages;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 import java.util.UUID;
 
-public class HistoryResponse extends RaspberryMessage {
+public class HistoryResponse extends SensorMessage {
 
     List<Observation> observations;
+    UUID requestId;
+
+    /**
+     * The ID of the HistoryRequest for which this response contains the data
+     * @return {UUID}
+     */
+    public UUID getRequestId() {
+        return requestId;
+    }
+
+    /**
+     * {@link HistoryResponse#getRequestId()}
+     */
+    public void setRequestId(UUID requestId) {
+        this.requestId = requestId;
+    }
 
     /**
      * The observations stored for the requested time period
@@ -26,6 +44,12 @@ public class HistoryResponse extends RaspberryMessage {
     }
 
     @Override
+    @JsonIgnore
+    public String getRoutingKey() {
+        return String.format("datapoints.history.%s", getRequestId());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -33,7 +57,8 @@ public class HistoryResponse extends RaspberryMessage {
 
         HistoryResponse that = (HistoryResponse) o;
 
-        return !(observations != null ? !observations.equals(that.observations) : that.observations != null);
+        if (observations != null ? !observations.equals(that.observations) : that.observations != null) return false;
+        return !(requestId != null ? !requestId.equals(that.requestId) : that.requestId != null);
 
     }
 
@@ -41,6 +66,7 @@ public class HistoryResponse extends RaspberryMessage {
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (observations != null ? observations.hashCode() : 0);
+        result = 31 * result + (requestId != null ? requestId.hashCode() : 0);
         return result;
     }
 }
