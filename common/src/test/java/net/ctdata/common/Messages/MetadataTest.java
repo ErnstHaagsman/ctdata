@@ -28,8 +28,7 @@ public class MetadataTest {
         s1.setType("Tree Leaf Counter");
 
         List<SensorMetadata> sensors = new LinkedList<SensorMetadata>();
-        sensors.add(s1);
-        sut.setSensors(sensors);
+        sut.getSensors().add(s1);
 
         assertSerializes(sut);
     }

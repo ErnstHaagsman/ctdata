@@ -37,10 +37,8 @@ public class HistoryResponseTest {
         sut.setRaspberryNode(raspberryNode);
         sut.setSensor(sensor);
         sut.setRequestId(UUID.randomUUID());
-        List<Observation> observations = new LinkedList<Observation>();
-        observations.add(obs1);
-        observations.add(obs2);
-        sut.setObservations(observations);
+        sut.getObservations().add(obs1);
+        sut.getObservations().add(obs2);
 
         assertSerializes(sut);
     }

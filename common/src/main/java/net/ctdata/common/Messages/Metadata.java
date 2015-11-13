@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.ctdata.common.Messages.Abstract.RaspberryMessage;
 import net.ctdata.common.Messages.Partial.SensorMetadata;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Metadata extends RaspberryMessage {
-    List<SensorMetadata> sensors;
+    List<SensorMetadata> sensors = new LinkedList<SensorMetadata>();
 
     /**
      * The metadata of all sensors connected to this Raspberry Pi node
@@ -15,13 +16,6 @@ public class Metadata extends RaspberryMessage {
      */
     public List<SensorMetadata> getSensors() {
         return sensors;
-    }
-
-    /**
-     * @see {@link Metadata#getSensors()}
-     */
-    public void setSensors(List<SensorMetadata> sensors) {
-        this.sensors = sensors;
     }
 
     @Override

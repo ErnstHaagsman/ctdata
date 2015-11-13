@@ -3,12 +3,13 @@ package net.ctdata.common.Messages;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.ctdata.common.Messages.Abstract.SensorMessage;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
 public class HistoryResponse extends SensorMessage {
 
-    List<Observation> observations;
+    List<Observation> observations = new LinkedList<Observation>();
     UUID requestId;
 
     /**
@@ -35,13 +36,6 @@ public class HistoryResponse extends SensorMessage {
      */
     public List<Observation> getObservations() {
         return observations;
-    }
-
-    /**
-     * @see {@link HistoryResponse#getObservations()}
-     */
-    public void setObservations(List<Observation> observations) {
-        this.observations = observations;
     }
 
     @Override
