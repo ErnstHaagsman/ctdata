@@ -4,48 +4,12 @@ import org.joda.time.DateTime;
 
 import java.util.UUID;
 
-public class IncomingObservationMessage {
+public class Observation extends SensorMessage {
 
-    private UUID raspberryNode;
-    private int sensor;
     private DateTime time;
     private double observation;
     private double latitude;
     private double longitude;
-
-    /**
-     * The unique ID for the raspberry node which reported this observation
-     *
-     * @return {UUID}
-     */
-    public UUID getRaspberryNode() {
-        return raspberryNode;
-    }
-
-    /**
-     * @see {@link IncomingObservationMessage#getRaspberryNode()}
-     */
-    public void setRaspberryNode(UUID raspberryNode) {
-        this.raspberryNode = raspberryNode;
-    }
-
-    /**
-     * The sensor on the raspberry node which made this observation. The sensor is only unique within
-     * the raspberry node. For unique identification of a sensor within the network, both the Raspberry Node's ID
-     * and the sensor number are necessary.
-     *
-     * @return {int}
-     */
-    public int getSensor() {
-        return sensor;
-    }
-
-    /**
-     * @see {@link IncomingObservationMessage#getSensor()}
-     */
-    public void setSensor(int sensor) {
-        this.sensor = sensor;
-    }
 
     /**
      * The time at which this observation was made. Please ensure the timezone information is correct.
@@ -57,7 +21,7 @@ public class IncomingObservationMessage {
     }
 
     /**
-     * @see {@link IncomingObservationMessage#getTime()}
+     * @see {@link Observation#getTime()}
      */
     public void setTime(DateTime time) {
         this.time = time;
@@ -73,7 +37,7 @@ public class IncomingObservationMessage {
     }
 
     /**
-     * @see {@link IncomingObservationMessage#getObservation()}
+     * @see {@link Observation#getObservation()}
      */
     public void setObservation(double observation) {
         this.observation = observation;
@@ -95,7 +59,7 @@ public class IncomingObservationMessage {
     }
 
     /**
-     * @see {@link IncomingObservationMessage#getLatitude()}
+     * @see {@link Observation#getLatitude()}
      */
     public void setLatitude(double latitude) {
         this.latitude = latitude;
@@ -117,7 +81,7 @@ public class IncomingObservationMessage {
     }
 
     /**
-     * @see {@link IncomingObservationMessage#getLongitude()}}
+     * @see {@link Observation#getLongitude()}}
      */
     public void setLongitude(double longitude) {
         this.longitude = longitude;

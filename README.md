@@ -46,4 +46,7 @@ RabbitMQ
 --------
 
 All messages on RabbitMQ should have a body which is an object from the net.ctdata.common.Messages package encoded using
-the Jackson 2 JSON library (the same version as the one which comes with Spring).
+the Jackson 2 JSON library (the same version as the one which comes with Spring). 
+
+As Joda DateTime objects are used, please make sure to use Jackson's JodaModule. See the common package's unit tests.
+(AssertSerializes class).
