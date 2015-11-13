@@ -1,4 +1,10 @@
 package net.ctdata.common.Messages;
 
-public class DeleteNode {
+import net.ctdata.common.Messages.Abstract.RaspberryMessage;
+
+public class DeleteNode extends RaspberryMessage {
+    @Override
+    public String getRoutingKey() {
+        return "nodemgt.delete_node";
+    }
 }
