@@ -87,4 +87,8 @@ public class Observation extends SensorMessage {
         this.longitude = longitude;
     }
 
+    @Override
+    public String getRoutingKey() {
+        return String.format("datapoints.incoming.%s.%d", getRaspberryNode(), getSensor());
+    }
 }
