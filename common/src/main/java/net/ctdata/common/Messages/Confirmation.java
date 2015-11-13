@@ -1,13 +1,15 @@
 package net.ctdata.common.Messages;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 public class Confirmation extends SensorMessage {
 
     private DateTime time;
 
     /**
-     * The time at which this observation was made. Please ensure the timezone information is correct.
+     * The time at which this observation was made, stored in UTC.
      *
      * @return {org.joda.time.DateTime}
      */
@@ -19,7 +21,13 @@ public class Confirmation extends SensorMessage {
      * @see {@link Observation#getTime()}
      */
     public void setTime(DateTime time) {
-        this.time = time;
+        this.time = time.toDateTime(DateTimeZone.UTC);
+    }
+
+    @Override
+    @JsonIgnore
+    public String getRoutingKey() {
+        return String.format("datapoints.confirm.%s.%d", getRaspberryNode(), getSensor());
     }
 
     @Override

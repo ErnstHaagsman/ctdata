@@ -1,6 +1,8 @@
 package net.ctdata.common.Messages;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import java.util.UUID;
 
@@ -12,7 +14,8 @@ public class Observation extends SensorMessage {
     private double longitude;
 
     /**
-     * The time at which this observation was made. Please ensure the timezone information is correct.
+     * The time at which this observation was made. The timezone in this field is UTC
+     *
      *
      * @return {org.joda.time.DateTime}
      */
@@ -21,10 +24,15 @@ public class Observation extends SensorMessage {
     }
 
     /**
+     * To set the time, use the following code:
+     * <code>
+     * DateTime dateTime = new LocalDateTime(timestamp.getTime()).toDateTime(DateTimeZone.UTC);
+     * </code>
+     *
      * @see {@link Observation#getTime()}
      */
     public void setTime(DateTime time) {
-        this.time = time;
+        this.time = time.toDateTime(DateTimeZone.UTC);
     }
 
     /**
@@ -88,7 +96,37 @@ public class Observation extends SensorMessage {
     }
 
     @Override
+    @JsonIgnore
     public String getRoutingKey() {
         return String.format("datapoints.incoming.%s.%d", getRaspberryNode(), getSensor());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Observation that = (Observation) o;
+
+        if (Double.compare(that.observation, observation) != 0) return false;
+        if (Double.compare(that.latitude, latitude) != 0) return false;
+        if (Double.compare(that.longitude, longitude) != 0) return false;
+        return !(time != null ? !time.equals(that.time) : that.time != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        long temp;
+        result = 31 * result + (time != null ? time.hashCode() : 0);
+        temp = Double.doubleToLongBits(observation);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(latitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(longitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }

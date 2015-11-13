@@ -2,6 +2,7 @@ package net.ctdata.common.Messages;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.ctdata.common.Queue.Message;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Interval;
 
 import java.util.UUID;
@@ -12,7 +13,7 @@ public class HistoryRequest extends SensorMessage implements Message {
     private Interval timePeriod;
 
     /**
-     * The time interval for which to get this sensor's data
+     * The time interval for which to get this sensor's data. UTC Timezone.
      * @return {org.joda.time.Interval}
      */
     public Interval getTimePeriod() {
@@ -23,7 +24,8 @@ public class HistoryRequest extends SensorMessage implements Message {
      * @see {@link HistoryRequest#getTimePeriod()}
      */
     public void setTimePeriod(Interval timePeriod) {
-        this.timePeriod = timePeriod;
+        this.timePeriod = new Interval(timePeriod.getStart().toDateTime(DateTimeZone.UTC),
+                                       timePeriod.getEnd().toDateTime(DateTimeZone.UTC));
     }
 
     /**

@@ -3,9 +3,10 @@ package net.ctdata.common.Messages;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.sun.corba.se.impl.presentation.rmi.ExceptionHandlerImpl;
 import net.ctdata.common.Queue.Message;
 import net.ctdata.common.Queue.QueueListener;
+
+import java.util.TimeZone;
 
 public abstract class AbstractMessage implements Message {
 
@@ -32,6 +33,7 @@ public abstract class AbstractMessage implements Message {
     @JsonIgnore
     public String getBody() {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.setTimeZone(TimeZone.getTimeZone("UTC"));
         mapper.registerModule(new JodaModule());
         try {
             return mapper.writeValueAsString(this);

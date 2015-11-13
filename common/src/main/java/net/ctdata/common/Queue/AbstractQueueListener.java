@@ -6,6 +6,7 @@ import net.ctdata.common.Messages.AbstractMessage;
 import net.ctdata.common.Messages.HistoryResponse;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.TimeZone;
 
 abstract class AbstractQueueListener<T> implements QueueListener {
     Class<T> messageClass;
@@ -24,6 +25,7 @@ abstract class AbstractQueueListener<T> implements QueueListener {
     public void HandleMessage(Message message) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JodaModule());
+        mapper.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         try {
             T response = (T)mapper.readValue(message.getBody(), messageClass);
