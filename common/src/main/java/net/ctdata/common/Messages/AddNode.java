@@ -1,5 +1,6 @@
 package net.ctdata.common.Messages;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.ctdata.common.Messages.Abstract.AbstractMessage;
 
 public class AddNode extends AbstractMessage {
@@ -21,6 +22,7 @@ public class AddNode extends AbstractMessage {
     }
 
     @Override
+    @JsonIgnore
     public String getRoutingKey() {
         return "nodemgt.add_node";
     }
