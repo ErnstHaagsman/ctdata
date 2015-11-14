@@ -8,6 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 class RouteThread implements Runnable {
     BlockingQueue<Observation> observations;
     DataListener listener;
+    boolean running;
 
     public RouteThread(DataListener listener){
         observations = new LinkedBlockingQueue<Observation>();
@@ -18,12 +19,22 @@ class RouteThread implements Runnable {
         observations.put(observation);
     }
 
+    public void start(){
+        running = true;
+        Thread thread = new Thread(this);
+        thread.start();
+    }
+
+    public void stop(){
+        running = false;
+    }
+
     @Override
     public void run() {
-        while(true){
+        while(running){
             try {
                 Observation observation = observations.take();
-                listener.NewObservation(observation);
+                if(running) listener.NewObservation(observation);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

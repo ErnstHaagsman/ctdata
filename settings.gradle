@@ -1,1 +1,1 @@
-include ":common", ":datanode", ":orchestrator", ":raspnodesim", ":sensorgateway", ":webapp"
+include ":common", ":datanode", ":orchestrator", ":raspnodesim", ":raspnodeprotocol", ":sensorgateway", ":webapp"
