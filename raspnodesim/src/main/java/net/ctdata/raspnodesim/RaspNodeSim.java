@@ -20,8 +20,17 @@ public class RaspNodeSim {
         UUID raspNodeId = UUID.randomUUID();
         DataRouter router = new DataRouter();
 
-        connectedSensors.add(new RandomZeroHundredSensor(new Period(0,0,5,0), 1));
-        connectedSensors.add(new RandomZeroHundredSensor(new Period(0,0,3,0), 2));
+        // S1 - location: SJSU Library
+        Sensor s1 = new RandomZeroHundredSensor(new Period(0,0,5,0), 1);
+        s1.setLatitude(37.335571);
+        s1.setLongitude(-121.884661);
+        connectedSensors.add(s1);
+
+        // S2 - location: BBC
+        Sensor s2 = new RandomZeroHundredSensor(new Period(0,0,3,0), 2);
+        s2.setLatitude(37.337079);
+        s2.setLongitude(-121.878867);
+        connectedSensors.add(s2);
 
         RaspNodeServer websocketServer = new RaspNodeServer();
         websocketServer.start();
