@@ -50,12 +50,16 @@ abstract public class BaseDatabaseConnector implements DatabaseConnector{
     @Override
     public int establishConnection(String configFilePath) throws SQLException {
 
-        if(this.setDbProperties(configFilePath)== DatanodeConstants.SUCCESS){
+     //   if(this.setDbProperties(configFilePath)== DatanodeConstants.SUCCESS){
 
-            String url = "jdbc:mysql://" + this.properties.getProperty("databasehost")
-                            + ":" + this.properties.getProperty("databaseport") + "/" + this.properties.getProperty("databaseschema");
+//            String url = "jdbc:mysql://" + this.properties.getProperty("databasehost")
+//                            + ":" + this.properties.getProperty("databaseport") + "/" + this.properties.getProperty("databaseschema");
+//
+//            this.conn = DriverManager.getConnection(url, this.properties.getProperty("databaseuser"), this.properties.getProperty("databasepswd"));
 
-            this.conn = DriverManager.getConnection(url, this.properties.getProperty("databaseuser"), this.properties.getProperty("databasepswd"));
+            String url = "jdbc:mysql://localhost:3306/cdata";
+
+            this.conn = DriverManager.getConnection(url, "root", "admin123");
 
             if(this.conn!=null) {
                 System.out.println("Database connection successfully established..");
@@ -65,9 +69,9 @@ abstract public class BaseDatabaseConnector implements DatabaseConnector{
                 System.err.println("Failed to establish database connection..");
                 return DatanodeConstants.FAILURE;
             }
-        }
-        else
-            return DatanodeConstants.FAILURE;
+      //  }
+     //   else
+      //      return DatanodeConstants.FAILURE;
     }
 
     @Override

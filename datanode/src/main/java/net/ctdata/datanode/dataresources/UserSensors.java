@@ -1,21 +1,19 @@
 package net.ctdata.datanode.dataresources;
 
-import java.util.UUID;
-
 /**
  * Created by aditi on 15/11/15.
  */
 public class UserSensors {
 
     private String userId;
-    private UUID raspberryNode;
+    private String raspberryUrl;
 
     public UserSensors() {
     }
 
-    public UserSensors(String userId, UUID raspberryNode) {
+    public UserSensors(String userId, String raspberryUrl) {
         this.userId = userId;
-        this.raspberryNode = raspberryNode;
+        this.raspberryUrl = raspberryUrl;
     }
 
     public String getUserId() {
@@ -26,11 +24,11 @@ public class UserSensors {
         this.userId = userId;
     }
 
-    public UUID getRaspberryNode() {
-        return raspberryNode;
+    public String getRaspberryUrl() {
+        return raspberryUrl;
     }
 
-    public void setRaspberryNode(UUID raspberryNode) {
-        this.raspberryNode = raspberryNode;
+    public void setRaspberryUrl(String raspberryUrl) {
+        this.raspberryUrl = raspberryUrl;
     }
 }

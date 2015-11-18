@@ -16,41 +16,41 @@ import static org.junit.Assert.assertTrue;
 public class UserSensorsConnectorTest {
 
     private UserSensorsConnector userSensorConn;
-    private UUID raspberryNodeIdOne;
-    private UUID raspberryNodeIdTwo;
-    private UUID raspberryNodeIdThree;
-    private UUID raspberryNodeIdFour;
-    private UUID raspberryNodeIdFive;
+    private String raspberryNodeUrlOne;
+    private String raspberryNodeUrlTwo;
+    private String raspberryNodeUrlThree;
+    private String raspberryNodeUrlFour;
+    private String raspberryNodeUrlFive;
 
     @Before
     public void setUp(){
         this.userSensorConn = new UserSensorsConnector();
-        this.raspberryNodeIdOne = UUID.randomUUID();
-        this.raspberryNodeIdTwo = UUID.randomUUID();
-        this.raspberryNodeIdThree = UUID.randomUUID();
-        this.raspberryNodeIdFour = UUID.randomUUID();
-        this.raspberryNodeIdFive = UUID.randomUUID();
+        this.raspberryNodeUrlOne = UUID.randomUUID()+"./raspberry.net";
+        this.raspberryNodeUrlTwo = UUID.randomUUID()+"./raspberry.net";
+        this.raspberryNodeUrlThree = UUID.randomUUID()+"./raspberry.net";
+        this.raspberryNodeUrlFour = UUID.randomUUID()+"./raspberry.net";
+        this.raspberryNodeUrlFive = UUID.randomUUID()+"./raspberry.net";
     }
 
     @Test
     public void insertTest(){
-        UserSensors userSensors = new UserSensors("root", this.raspberryNodeIdOne);
+        UserSensors userSensors = new UserSensors("root", this.raspberryNodeUrlOne);
         int i = this.userSensorConn.insertInto(userSensors);
         assertTrue(i==1);
     }
 
     @Test
     public void updateTest(){
-        UserSensors userSensors = new UserSensors("root", this.raspberryNodeIdTwo);
+        UserSensors userSensors = new UserSensors("root", this.raspberryNodeUrlTwo);
         int i = this.userSensorConn.insertInto(userSensors);
-        userSensors.setRaspberryNode(this.raspberryNodeIdThree);
-        i = this.userSensorConn.updateFrom(userSensors, this.raspberryNodeIdTwo);
+        userSensors.setRaspberryUrl(this.raspberryNodeUrlThree);
+        i = this.userSensorConn.updateFrom(userSensors, this.raspberryNodeUrlTwo);
         assertTrue(i==1);
     }
 
     @Test
     public void deleteTest(){
-        UserSensors userSensors = new UserSensors("admin", this.raspberryNodeIdThree);
+        UserSensors userSensors = new UserSensors("admin", this.raspberryNodeUrlThree);
         int i = this.userSensorConn.insertInto(userSensors);
         i = this.userSensorConn.deleteFrom(userSensors);
         assertTrue(i==1);
@@ -60,9 +60,9 @@ public class UserSensorsConnectorTest {
     public void selectAllTest(){
         List<UserSensors> list = new ArrayList<UserSensors>();
 
-        UserSensors userSensors = new UserSensors("localadmin", this.raspberryNodeIdOne);
+        UserSensors userSensors = new UserSensors("localadmin", this.raspberryNodeUrlOne);
         int i = this.userSensorConn.insertInto(userSensors);
-        userSensors = new UserSensors("localroot", this.raspberryNodeIdTwo);
+        userSensors = new UserSensors("localroot", this.raspberryNodeUrlTwo);
         i = this.userSensorConn.insertInto(userSensors);
 
         list = this.userSensorConn.selectAll();
@@ -73,12 +73,13 @@ public class UserSensorsConnectorTest {
     public void selectTest(){
         List<UserSensors> list = new ArrayList<UserSensors>();
 
-        UserSensors userSensors = new UserSensors("chris", this.raspberryNodeIdOne);
+        UserSensors userSensors = new UserSensors("chris", this.raspberryNodeUrlOne);
         int i = this.userSensorConn.insertInto(userSensors);
-        userSensors = new UserSensors("chris", this.raspberryNodeIdTwo);
+        userSensors = new UserSensors("chris", this.raspberryNodeUrlTwo);
         i = this.userSensorConn.insertInto(userSensors);
 
         list = this.userSensorConn.selectFrom("chris");
         assertTrue(list.size()>0);
     }
+
 }

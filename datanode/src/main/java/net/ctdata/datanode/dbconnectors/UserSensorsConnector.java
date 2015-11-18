@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by aditi on 15/11/15.
@@ -23,7 +22,7 @@ public class UserSensorsConnector extends AdvanceDatabaseConnector {
     public int insertInto(UserSensors userSensors){
         setUp();
 
-        this.query = "INSERT INTO User_Sensors VALUES ('" + userSensors.getUserId() + "', '" + userSensors.getRaspberryNode() + "')";
+        this.query = "INSERT INTO User_Sensors VALUES ('" + userSensors.getUserId() + "', '" + userSensors.getRaspberryUrl() + "')";
 
         try{
             Integer count = (Integer) executeQuery(this.query, DatanodeConstants.INSERT_FLAG);
@@ -37,11 +36,11 @@ public class UserSensorsConnector extends AdvanceDatabaseConnector {
         return DatanodeConstants.FAILURE;
     }
 
-    public int updateFrom(UserSensors userSensors, UUID oldRaspberryNode){
+    public int updateFrom(UserSensors userSensors, String oldRaspberryUrl){
         setUp();
 
-        this.query = "UPDATE User_Sensors SET Raspberry_Node = '" + userSensors.getRaspberryNode() + "' WHERE User_Id = '" + userSensors.getUserId() + "'" +
-                        "AND Raspberry_Node = '" + oldRaspberryNode + "'";
+        this.query = "UPDATE User_Sensors SET Raspberry_Url = '" + userSensors.getRaspberryUrl() + "' WHERE User_Id = '" + userSensors.getUserId() + "'" +
+                        "AND Raspberry_Url = '" + oldRaspberryUrl + "'";
 
         try{
             Integer count = (Integer) executeQuery(this.query, DatanodeConstants.UPDATE_FLAG);
@@ -59,7 +58,7 @@ public class UserSensorsConnector extends AdvanceDatabaseConnector {
         setUp();
 
         this.query = "DELETE FROM User_Sensors WHERE User_Id = '" + userSensors.getUserId() + "'" +
-                        "AND Raspberry_Node = '" + userSensors.getRaspberryNode() + "'";
+                        "AND Raspberry_Url = '" + userSensors.getRaspberryUrl() + "'";
         try{
             Integer count = (Integer) executeQuery(this.query, DatanodeConstants.DELETE_FLAG);
             tearDown();
@@ -83,7 +82,7 @@ public class UserSensorsConnector extends AdvanceDatabaseConnector {
             while(result.next()){
                 UserSensors userSensors = new UserSensors();
                 userSensors.setUserId(result.getString("User_Id"));
-                userSensors.setRaspberryNode(UUID.fromString(result.getString("Raspberry_Node")));
+                userSensors.setRaspberryUrl(result.getString("Raspberry_Url"));
                 list.add(userSensors);
             }
         }catch(SQLException ex){
@@ -105,7 +104,7 @@ public class UserSensorsConnector extends AdvanceDatabaseConnector {
             while(result.next()){
                 UserSensors userSensors = new UserSensors();
                 userSensors.setUserId(result.getString("User_Id"));
-                userSensors.setRaspberryNode(UUID.fromString(result.getString("Raspberry_Node")));
+                userSensors.setRaspberryUrl(result.getString("Raspberry_Url"));
                 list.add(userSensors);
             }
         }catch(SQLException ex){

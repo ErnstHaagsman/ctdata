@@ -1,12 +1,24 @@
 package net.ctdata.datanode;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import net.ctdata.common.Messages.AddNode;
+import net.ctdata.common.Messages.Observation;
+import net.ctdata.common.Queue.Listeners.AddNodeListener;
+import net.ctdata.common.Queue.Listeners.ObservationListener;
+import net.ctdata.common.Queue.RabbitMqConnection;
+import net.ctdata.datanode.dataresources.Observations;
+import net.ctdata.datanode.dataresources.UserSensors;
+import net.ctdata.datanode.dbconnectors.ObservationsConnector;
+import net.ctdata.datanode.dbconnectors.UserSensorsConnector;
+import net.ctdata.datanode.utility.DatanodeConstants;
+import net.ctdata.datanode.utility.DateTimeConversions;
+import org.joda.time.DateTime;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by aditi on 14/11/15.
@@ -15,32 +27,54 @@ import java.util.Properties;
  */
 public class DatanodeManager {
 
-    static Properties properties = new Properties();
-    static Logger logger = Logger.getLogger(DatanodeManager.class);
+        public static void main(String[] args) throws IOException, TimeoutException, NoSuchAlgorithmException, KeyManagementException, URISyntaxException {
+            AddNode addNode = new AddNode();
+            addNode.setNodeURL(UUID.randomUUID() + "./raspberry.net");
 
-    public static void main(String[] args)
-    {
-        try{
-            InputStream input;
-            input = DatanodeManager.class.getClassLoader().getResourceAsStream("././resources/log4j.properties");
+            final RabbitMqConnection conn = new RabbitMqConnection("amqp://localhost");
+            conn.RegisterListener(new AddNodeListener() {
+                @Override
+                public void HandleMessage(AddNode message) {
+                    // insert AddNode data into User_Sensors table
+                    System.out.println("Received AddNode messgae..");
+                    UserSensorsConnector userSensorsConnector = new UserSensorsConnector();
+                    UserSensors userSensors = new UserSensors("admin", message.getNodeURL());
+                    int i = userSensorsConnector.insertInto(userSensors);
 
-            if(properties!=null)
-                properties.load(input);
-            else
-                System.out.println("Its null");
+                    if(i!= DatanodeConstants.FAILURE)
+                        System.out.println("Successfully added sensor node with url "+ message.getNodeURL() +" for user admin");
+                }
+            });
 
-            //PropertiesConfigurator is used to configure logger from properties file
-            PropertyConfigurator.configure(properties);
+            Observation obs = new Observation();
+            obs.setRaspberryNode(UUID.randomUUID());
+            obs.setSensor(1);
+            obs.setObservation(35.35);
+            obs.setTime(DateTime.now());
+            obs.setLatitude(12.678);
+            obs.setLongitude(-125.45);
 
-            //Log in console in and log file
-            logger.debug("Log4j appender configuration is successful !!");
+            conn.RegisterListener(new ObservationListener() {
+                @Override
+                public void HandleMessage(Observation message) {
+                    //insert Observation into the Observations table
+                    System.out.println("Received Observation data message..");
+                    ObservationsConnector obsConn = new ObservationsConnector();
+                    Observations obsData = new Observations();
+                    obsData.setRaspberryNode(message.getRaspberryNode());
+                    obsData.setSensorId(message.getSensor());
+                    obsData.setObservationData(message.getObservation());
+                    obsData.setObservationTime(DateTimeConversions.convertDateTimeToString(message.getTime()));
+                    int flag = obsConn.insertInto(obsData);
 
-        }catch(FileNotFoundException ex){
-            System.err.println("FATAL ERROR: log4j configuration file not found!!");
+                    if(flag != DatanodeConstants.FAILURE)
+                        System.out.println("Successfully added observavation for " +
+                                "raspberry node " + obsData.getRaspberryNode() + " , sensor id "+ obsData.getSensorId());
+                }
+            });
+            conn.SendMessage(addNode);
+            conn.SendMessage(obs);
+
         }
-        catch(IOException ex){
-            System.err.println("FATAL ERROR: log4j file I/O exception!!");
-        }
 
-    }
 }
