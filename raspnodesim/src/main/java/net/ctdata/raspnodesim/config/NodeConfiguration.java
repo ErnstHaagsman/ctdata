@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ctdata.common.Json.MapperSingleton;
 import net.ctdata.raspnodesim.sensors.Sensor;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +36,11 @@ public class NodeConfiguration {
     }
 
     public static NodeConfiguration fromJSON(String json) throws IOException {
+        ObjectMapper mapper = new MapperSingleton().getMapper();
+        return mapper.readValue(json, NodeConfiguration.class);
+    }
+
+    public static NodeConfiguration fromFile(File json) throws IOException {
         ObjectMapper mapper = new MapperSingleton().getMapper();
         return mapper.readValue(json, NodeConfiguration.class);
     }
