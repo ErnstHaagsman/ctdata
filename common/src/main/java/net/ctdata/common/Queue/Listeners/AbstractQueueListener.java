@@ -2,6 +2,7 @@ package net.ctdata.common.Queue.Listeners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import net.ctdata.common.Json.MapperSingleton;
 import net.ctdata.common.Messages.Abstract.AbstractMessage;
 import net.ctdata.common.Queue.Message;
 import net.ctdata.common.Queue.QueueListener;
@@ -23,9 +24,7 @@ abstract class AbstractQueueListener<T> implements QueueListener {
 
     @Override
     public void HandleMessage(Message message) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JodaModule());
-        mapper.setTimeZone(TimeZone.getTimeZone("UTC"));
+        ObjectMapper mapper = new MapperSingleton().getMapper();
 
         try {
             T response = (T)mapper.readValue(message.getBody(), messageClass);
