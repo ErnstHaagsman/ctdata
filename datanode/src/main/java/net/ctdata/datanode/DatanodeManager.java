@@ -11,13 +11,11 @@ import net.ctdata.datanode.dbconnectors.ObservationsConnector;
 import net.ctdata.datanode.dbconnectors.UserSensorsConnector;
 import net.ctdata.datanode.utility.DatanodeConstants;
 import net.ctdata.datanode.utility.DateTimeConversions;
-import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -27,9 +25,8 @@ import java.util.concurrent.TimeoutException;
  */
 public class DatanodeManager {
 
-        public static void main(String[] args) throws IOException, TimeoutException, NoSuchAlgorithmException, KeyManagementException, URISyntaxException {
-            AddNode addNode = new AddNode();
-            addNode.setNodeURL(UUID.randomUUID() + "./raspberry.net");
+        public static void main(String[] args) throws IOException, TimeoutException, NoSuchAlgorithmException, KeyManagementException, URISyntaxException
+        {
 
             final RabbitMqConnection conn = new RabbitMqConnection("amqp://localhost");
             conn.RegisterListener(new AddNodeListener() {
@@ -45,14 +42,6 @@ public class DatanodeManager {
                         System.out.println("Successfully added sensor node with url "+ message.getNodeURL() +" for user admin");
                 }
             });
-
-            Observation obs = new Observation();
-            obs.setRaspberryNode(UUID.randomUUID());
-            obs.setSensor(1);
-            obs.setObservation(35.35);
-            obs.setTime(DateTime.now());
-            obs.setLatitude(12.678);
-            obs.setLongitude(-125.45);
 
             conn.RegisterListener(new ObservationListener() {
                 @Override
@@ -72,8 +61,6 @@ public class DatanodeManager {
                                 "raspberry node " + obsData.getRaspberryNode() + " , sensor id "+ obsData.getSensorId());
                 }
             });
-            conn.SendMessage(addNode);
-            conn.SendMessage(obs);
 
         }
 
