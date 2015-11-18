@@ -40,7 +40,7 @@ IntelliJ Java defaults.
 
 Exceptions:
 
-    -   'Ensure line feed on save' should be set to true. This prevents merge conflicts at the end of the file.
+-   'Ensure line feed on save' should be set to true. This prevents merge conflicts at the end of the file.
 
 RabbitMQ
 --------
