@@ -9,12 +9,15 @@ import java.util.UUID;
 public abstract class AbstractSensor implements Sensor {
 
     DateTime nextObservationTime = DateTime.now();
-    Period pollingInterval;
+    int pollingInterval;
     int number;
     double latitude;
     double longitude;
 
-    public AbstractSensor(Period pollingInterval, int number){
+    public AbstractSensor(){
+    }
+
+    public AbstractSensor(int pollingInterval, int number){
         this.pollingInterval = pollingInterval;
         this.number = number;
     }
@@ -26,16 +29,16 @@ public abstract class AbstractSensor implements Sensor {
 
     @Override
     public void advanceObservationTime() {
-        nextObservationTime = nextObservationTime.plus(pollingInterval);
+        nextObservationTime = nextObservationTime.plusMillis(pollingInterval);
     }
 
     @Override
-    public Period getPollingInterval() {
+    public int getPollingInterval() {
         return pollingInterval;
     }
 
     @Override
-    public void setPollingInterval(Period pollingInterval) {
+    public void setPollingInterval(int pollingInterval) {
         this.pollingInterval = pollingInterval;
     }
 

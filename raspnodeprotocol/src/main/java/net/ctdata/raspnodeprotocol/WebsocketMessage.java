@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import net.ctdata.common.Json.MapperSingleton;
 import net.ctdata.common.Messages.Abstract.AbstractMessage;
 
 import java.io.IOException;
@@ -32,16 +33,12 @@ public class WebsocketMessage {
 
     @JsonIgnore
     public String toJson() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JodaModule());
-        mapper.setTimeZone(TimeZone.getTimeZone("UTC"));
+        ObjectMapper mapper = new MapperSingleton().getMapper();
         return mapper.writeValueAsString(this);
     }
 
     public static WebsocketMessage fromJson(String json) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JodaModule());
-        mapper.setTimeZone(TimeZone.getTimeZone("UTC"));
+        ObjectMapper mapper = new MapperSingleton().getMapper();
         return mapper.readValue(json, WebsocketMessage.class);
     }
 

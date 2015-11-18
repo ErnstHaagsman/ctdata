@@ -4,7 +4,11 @@ import org.joda.time.Period;
 
 public class RandomZeroHundredSensor extends AbstractSensor {
 
-    public RandomZeroHundredSensor(Period pollingInterval, int number){
+    public RandomZeroHundredSensor(){
+        super();
+    }
+
+    public RandomZeroHundredSensor(int pollingInterval, int number){
         super(pollingInterval, number);
     }
 

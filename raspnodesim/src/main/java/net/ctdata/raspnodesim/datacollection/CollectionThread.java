@@ -1,6 +1,7 @@
 package net.ctdata.raspnodesim.datacollection;
 
 import net.ctdata.common.Messages.Observation;
+import net.ctdata.raspnodesim.config.NodeConfiguration;
 import net.ctdata.raspnodesim.router.DataRouter;
 import net.ctdata.raspnodesim.sensors.Sensor;
 import org.joda.time.DateTime;
@@ -14,9 +15,9 @@ public class CollectionThread implements Runnable {
     List<Sensor> connectedSensors;
     DataRouter router;
 
-    public CollectionThread(UUID raspnodeId, List<Sensor> connectedSensors, DataRouter router){
-        this.raspnodeId = raspnodeId;
-        this.connectedSensors = connectedSensors;
+    public CollectionThread(NodeConfiguration configuration, DataRouter router){
+        this.raspnodeId = configuration.getNodeUUID();
+        this.connectedSensors = configuration.getConnectedSensors();
         this.router = router;
     }
 
