@@ -7,3 +7,9 @@ dependencies {
 	compile project (':raspnodeprotocol')
 	compile project (':common')
 }
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'net.ctdata.raspnodesim.RaspNodeSim'
+	}
+}
