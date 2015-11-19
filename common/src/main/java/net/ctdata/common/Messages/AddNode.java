@@ -4,7 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.ctdata.common.Messages.Abstract.AbstractMessage;
 
 public class AddNode extends AbstractMessage {
+    private String userId;
     private String nodeURL;
+
+    /**
+     * User Id of the user
+     * @return {String}
+     */
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     /**
      * URL of the node to add

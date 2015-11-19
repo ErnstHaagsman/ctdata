@@ -1,12 +1,19 @@
 package net.ctdata.datanode.controllers.dbconnectors;
 
 import net.ctdata.datanode.dataresources.RaspberryNodes;
+import net.ctdata.datanode.dbconnectors.BaseDatabaseConnector;
+import net.ctdata.datanode.dbconnectors.DatabaseConnector;
 import net.ctdata.datanode.dbconnectors.RaspberryNodesConnector;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
@@ -14,7 +21,7 @@ import static org.junit.Assert.assertTrue;
  * Created by aditi on 15/11/15.
  */
 public class RaspberryNodesConnectorTest {
-
+    private DatabaseConnector dbConnector;
     private RaspberryNodesConnector raspConn;
     private UUID raspberryNodeIdOne;
     private UUID raspberryNodeIdTwo;
@@ -31,7 +38,22 @@ public class RaspberryNodesConnectorTest {
 
     @Before
     public void setUp(){
-        this.raspConn = new RaspberryNodesConnector();
+        try {
+            // fetching the database connection properties
+            InputStream input = this.getClass().getResourceAsStream("dbconfig.properties");
+            Properties properties = new Properties();
+            properties.load(input);
+            // Initialising the database connection
+            this.dbConnector = new BaseDatabaseConnector(properties);
+            this.dbConnector.establishConnection();
+            this.raspConn = new RaspberryNodesConnector(this.dbConnector);
+
+        }catch (IOException ex){
+
+        }catch (SQLException ex){
+
+        }
+
         this.raspberryNodeIdOne = UUID.randomUUID();
         this.raspberryNodeIdTwo = UUID.randomUUID();
         this.raspberryNodeIdThree = UUID.randomUUID();
@@ -47,7 +69,7 @@ public class RaspberryNodesConnectorTest {
     }
 
     @Test
-    public void insertTest(){
+    public void insertTest() throws SQLException{
         RaspberryNodes node = new RaspberryNodes(this.raspberryNodeIdOne, this.raspberryNodeOneUrl, this.gatewayIdOne);
 
         int i = raspConn.insertInto(node);
@@ -55,7 +77,7 @@ public class RaspberryNodesConnectorTest {
     }
 
     @Test
-    public void uodateTest(){
+    public void uodateTest() throws SQLException{
         RaspberryNodes node = new RaspberryNodes(this.raspberryNodeIdTwo, this.raspberryNodeOneUrl, this.gatewayIdOne);
         int i = raspConn.insertInto(node);
 
@@ -67,7 +89,7 @@ public class RaspberryNodesConnectorTest {
     }
 
     @Test
-    public void deleteTest(){
+    public void deleteTest() throws SQLException{
         RaspberryNodes node = new RaspberryNodes(this.raspberryNodeIdThree, this.raspberryNodeThreeUrl, this.gatewayIdTwo);
         int i = raspConn.insertInto(node);
         i = this.raspConn.deleteFrom(node);
@@ -75,7 +97,7 @@ public class RaspberryNodesConnectorTest {
     }
 
     @Test
-    public void selectAll(){
+    public void selectAll() throws SQLException{
         List<RaspberryNodes> list = new ArrayList<RaspberryNodes>();
 
         RaspberryNodes node = new RaspberryNodes(this.raspberryNodeIdFour, this.raspberryNodeFourUrl, this.gatewayIdTwo);
@@ -85,5 +107,14 @@ public class RaspberryNodesConnectorTest {
 
         list = this.raspConn.selectAll();
         assertTrue(list.size()>0);
+    }
+
+    @After
+    public void TearDown(){
+        try{
+            this.dbConnector.closeConnection();
+        }catch (SQLException ex){
+
+        }
     }
 }
