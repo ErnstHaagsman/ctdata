@@ -38,8 +38,7 @@ public class RaspberryNodesConnector{
 
     public int updateFrom(RaspberryNodes node) throws SQLException{
 
-        this.query = "UPDATE Raspberry_Nodes SET Raspberry_Url = '" + node.getRaspberryUrl() +
-                "', Gateway_Id = '" + node.getGatewayId() + "' WHERE Raspberry_Node = '" + node.getRaspberryNode() + "'";
+        this.query = "UPDATE Raspberry_Nodes SET Raspberry_Node = '" + node.getRaspberryNode() + "' WHERE Raspberry_Url = '" + node.getRaspberryUrl() + "'";
 
         Integer count = (Integer) dbConnector.executeQuery(this.query, DatanodeConstants.UPDATE_FLAG);
         if(count != null)
@@ -51,7 +50,7 @@ public class RaspberryNodesConnector{
 
     public int deleteFrom(RaspberryNodes node) throws SQLException{
 
-        this.query = "DELETE FROM Raspberry_Nodes WHERE Raspberry_Node = '" + node.getRaspberryNode() + "'";
+        this.query = "DELETE FROM Raspberry_Nodes WHERE Raspberry_Url = '" + node.getRaspberryUrl() + "'";
 
         Integer count = (Integer) dbConnector.executeQuery(this.query, DatanodeConstants.DELETE_FLAG);
         if(count != null)
@@ -84,7 +83,7 @@ public class RaspberryNodesConnector{
 
         RaspberryNodes returnNode = new RaspberryNodes();
 
-        this.query = "SELECT * FROM Raspberry_Nodes WHERE Raspberry_Node = '" + node.getRaspberryNode() + "'";
+        this.query = "SELECT * FROM Raspberry_Nodes WHERE Raspberry_Url = '" + node.getRaspberryUrl() + "'";
         ResultSet result = (ResultSet) dbConnector.executeQuery(this.query, DatanodeConstants.SELECT_FLAG);
         if(result!=null){
             while(result.next()){
@@ -111,7 +110,7 @@ public class RaspberryNodesConnector{
 
     public int count(RaspberryNodes node) throws SQLException{
 
-        this.query = "SELECT COUNT(*) AS Total FROM Raspberry_Nodes WHERE Raspberry_Node = '" + node.getRaspberryNode() + "'";
+        this.query = "SELECT COUNT(*) AS Total FROM Raspberry_Nodes WHERE Raspberry_Url = '" + node.getRaspberryUrl() + "'";
 
         ResultSet result = (ResultSet) dbConnector.executeQuery(this.query, DatanodeConstants.SELECT_FLAG);
         if(result!=null){

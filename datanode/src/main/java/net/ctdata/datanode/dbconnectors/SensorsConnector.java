@@ -41,7 +41,7 @@ public class SensorsConnector{
 
     public int updateFrom(Sensors sensor) throws SQLException{
 
-        this.query = "UPDATE Sensors SET Last_Observation_Time = '" + sensor.getLastObservationTime() +
+        this.query = "UPDATE Sensors SET Polling_Frequency = '" + sensor.getPollingFrequency() +
                         "' WHERE Raspberry_Node = "+ "'" + sensor.getRaspberryNode() + "' AND Sensor_Id = " + sensor.getSensorId();
 
         Integer count = (Integer) dbConnector.executeQuery(this.query, DatanodeConstants.UPDATE_FLAG);
@@ -90,28 +90,30 @@ public class SensorsConnector{
         return list;
     }
 
-    public Sensors selectFrom(Sensors sensor) throws SQLException{
+    public List<Sensors> selectFrom(UUID nodeId) throws SQLException{
 
-        Sensors returnSensor = new Sensors();
+        List<Sensors> list = new ArrayList<Sensors>();
 
-        this.query = "SELECT * FROM Sensors WHERE Raspberry_Node = "+ "'" + sensor.getRaspberryNode() + "' AND Sensor_Id = " + sensor.getSensorId();
+        this.query = "SELECT * FROM Sensors WHERE Raspberry_Node = '" + nodeId + "'";
 
         ResultSet result = (ResultSet) dbConnector.executeQuery(this.query, DatanodeConstants.SELECT_FLAG);
 
         if(result!=null){
             while(result.next()){
-                returnSensor.setRaspberryNode(UUID.fromString(result.getString("Raspberry_Node")));
-                returnSensor.setSensorId(result.getInt("Sensor_Id"));
-                returnSensor.setSensorName(result.getString("Sensor_Name"));
-                returnSensor.setType(result.getString("Type"));
-                returnSensor.setPollingFrequency(result.getInt("Polling_Frequency"));
-                returnSensor.setLastObservationTime(DateTimeConversions.getSQLTimestampString(result.getTimestamp("Last_Observation_Time")));
-                returnSensor.setLongitude(result.getDouble("Longitude"));
-                returnSensor.setLatitude(result.getDouble("Longitude"));
+                Sensors sensor = new Sensors();
+                sensor.setRaspberryNode(UUID.fromString(result.getString("Raspberry_Node")));
+                sensor.setSensorId(result.getInt("Sensor_Id"));
+                sensor.setSensorName(result.getString("Sensor_Name"));
+                sensor.setType(result.getString("Type"));
+                sensor.setPollingFrequency(result.getInt("Polling_Frequency"));
+                sensor.setLastObservationTime(DateTimeConversions.getSQLTimestampString(result.getTimestamp("Last_Observation_Time")));
+                sensor.setLongitude(result.getDouble("Longitude"));
+                sensor.setLatitude(result.getDouble("Longitude"));
 
+                list.add(sensor);
             }
         }
-        return returnSensor;
+        return list;
     }
 
     public int count() throws SQLException{

@@ -24,7 +24,8 @@ public class UserSensorsConnector {
 
     public int insertInto(UserSensors userSensors) throws SQLException{
 
-        this.query = "INSERT INTO User_Sensors VALUES ('" + userSensors.getUserId() + "', '" + userSensors.getRaspberryUrl() + "')";
+        this.query = "INSERT INTO User_Sensors VALUES ('" + userSensors.getUserId() + "', '" + userSensors.getRaspberryUrl() + "'," +
+                       "'" + userSensors.getConnectionFlag() + "')";
         Integer count = (Integer) dbConnector.executeQuery(this.query, DatanodeConstants.INSERT_FLAG);
         if(count != null)
             return count.intValue();
@@ -33,10 +34,10 @@ public class UserSensorsConnector {
         }
     }
 
-    public int updateFrom(UserSensors userSensors, String oldRaspberryUrl) throws SQLException{
+    public int updateFrom(UserSensors userSensors) throws SQLException{
 
-        this.query = "UPDATE User_Sensors SET Raspberry_Url = '" + userSensors.getRaspberryUrl() + "' WHERE User_Id = '" + userSensors.getUserId() + "'" +
-                        "AND Raspberry_Url = '" + oldRaspberryUrl + "'";
+        this.query = "UPDATE User_Sensors SET Connection_Flag = '" + userSensors.getConnectionFlag() + "' WHERE User_Id = '" + userSensors.getUserId() + "'" +
+                        "AND Raspberry_Url = '" + userSensors.getRaspberryUrl() + "'";
 
         Integer count = (Integer) dbConnector.executeQuery(this.query, DatanodeConstants.UPDATE_FLAG);
         if(count != null)
@@ -64,7 +65,7 @@ public class UserSensorsConnector {
     public List<UserSensors> selectAll() throws SQLException{
         List<UserSensors> list = new ArrayList<UserSensors>();
 
-        this.query = "SELECT * FROM User_Sensors";
+        this.query = "SELECT * FROM User_Sensors WHERE Connection_Flag = 'Y'";
         ResultSet result = (ResultSet) dbConnector.executeQuery(this.query, DatanodeConstants.SELECT_FLAG);
 
         if(result != null){
@@ -81,7 +82,8 @@ public class UserSensorsConnector {
     public List<UserSensors> selectFrom(String uId) throws SQLException{
         List<UserSensors> list = new ArrayList<UserSensors>();
 
-        this.query = "SELECT * FROM User_Sensors WHERE user_Id = '" + uId + "'";
+        this.query = "SELECT * FROM User_Sensors WHERE user_Id = '" + uId + "'" +
+                " AND Connection_Flag = 'Y'";
         ResultSet result = (ResultSet) dbConnector.executeQuery(this.query, DatanodeConstants.SELECT_FLAG);
 
         if(result != null){

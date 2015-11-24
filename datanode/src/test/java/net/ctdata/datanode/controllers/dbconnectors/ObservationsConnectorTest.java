@@ -51,7 +51,7 @@ public class ObservationsConnectorTest {
 
     @Test
     public void insertTest() throws SQLException{
-        Observations obs = new Observations(this.raspberryNodeIdOne, 1, 35.65, DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), DatanodeConstants.ACK);
+        Observations obs = new Observations(this.raspberryNodeIdOne, 1, 35.65, DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), DatanodeConstants.ACK, 37.3394 , -121.8938);
 
         int i = this.obsConn.insertInto(obs);
         assertTrue(i==1);
@@ -59,7 +59,7 @@ public class ObservationsConnectorTest {
 
     @Test
     public void updateTest() throws SQLException{
-        Observations obs = new Observations(this.raspberryNodeIdTwo, 1, 67.98, DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), DatanodeConstants.NACK);
+        Observations obs = new Observations(this.raspberryNodeIdTwo, 1, 67.98, DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), DatanodeConstants.NACK, 37.3394 , -121.8938);
 
         int i = this.obsConn.insertInto(obs);
 
@@ -70,7 +70,7 @@ public class ObservationsConnectorTest {
 
     @Test
     public void deleteTest() throws SQLException{
-        Observations obs = new Observations(this.raspberryNodeIdTwo, 2, 45.98, DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), DatanodeConstants.ACK);
+        Observations obs = new Observations(this.raspberryNodeIdTwo, 2, 45.98, DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), DatanodeConstants.ACK, 37.3394 , -121.8938);
 
         int i = this.obsConn.insertInto(obs);
         i= this.obsConn.deleteFrom(obs);
@@ -81,10 +81,10 @@ public class ObservationsConnectorTest {
     public void selectTest() throws SQLException{
         List<Observations> list = new ArrayList<Observations>();
 
-        Observations obs = new Observations(this.raspberryNodeIdOne, 2, 106.78, DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), DatanodeConstants.ACK);
+        Observations obs = new Observations(this.raspberryNodeIdOne, 2, 106.78, DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), DatanodeConstants.ACK, 37.3394 , -121.8938);
         int i = this.obsConn.insertInto(obs);
 
-        obs = new Observations(this.raspberryNodeIdTwo, 3, 12.89, DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), DatanodeConstants.ACK);
+        obs = new Observations(this.raspberryNodeIdTwo, 3, 12.89, DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), DatanodeConstants.ACK, 37.3394 , -121.8938);
         i = this.obsConn.insertInto(obs);
 
         list = this.obsConn.selectAll();

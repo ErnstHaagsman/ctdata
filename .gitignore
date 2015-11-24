@@ -14,3 +14,6 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
+
+# Log files
+*.log

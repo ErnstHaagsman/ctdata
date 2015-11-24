@@ -8,7 +8,7 @@ public class AddNode extends AbstractMessage {
     private String nodeURL;
 
     /**
-     * User Id of the user
+     * Login user Id of the user
      * @return {String}
      */
     public String getUserId() {

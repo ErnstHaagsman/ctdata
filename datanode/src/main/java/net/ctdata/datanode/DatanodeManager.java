@@ -1,12 +1,12 @@
 package net.ctdata.datanode;
 
 import net.ctdata.common.Messages.AddNode;
+import net.ctdata.common.Messages.HistoryRequest;
 import net.ctdata.common.Messages.Observation;
 import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.datanode.dbconnectors.BaseDatabaseConnector;
 import net.ctdata.datanode.dbconnectors.DatabaseConnector;
-import net.ctdata.datanode.queuelisteners.MyAddNodeListener;
-import net.ctdata.datanode.queuelisteners.MyObservationsListener;
+import net.ctdata.datanode.queuelisteners.*;
 import net.ctdata.datanode.utility.DatanodeConstants;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -32,8 +32,9 @@ import java.util.concurrent.TimeoutException;
  */
 public class DatanodeManager {
 
-    static Logger logger = Logger.getLogger(DatanodeManager.class);
-    static DatabaseConnector dbConnector;
+        static Logger logger = Logger.getLogger(DatanodeManager.class);
+        static DatabaseConnector dbConnector;
+        static RabbitMqConnection conn;
 
         public static void main(String[] args) throws IOException, TimeoutException, NoSuchAlgorithmException, KeyManagementException, URISyntaxException
         {
@@ -71,15 +72,29 @@ public class DatanodeManager {
             properties.load(input);
 
             //Establishing the RabbitMQ connection
-            final RabbitMqConnection conn = new RabbitMqConnection(properties.getProperty("rabbitmqUrl"));
+            conn = new RabbitMqConnection(properties.getProperty("rabbitmqUrl"));
 
             // Register ADD_NODE message listener
-            logger.info("Registering the ADD_NODE message listener..");
-            conn.RegisterListener(new MyAddNodeListener(dbConnector));
+            logger.info("Registering ADD_NODE message listener..");
+            conn.RegisterListener(new MyAddNodeListener(conn, dbConnector));
+
+            // Register CONNECT message listener
+            logger.info("Registering CONNECT message listener..");
+            conn.RegisterListener(new MyConnectListener(conn, dbConnector));
+
+            // Register UPDATE_FREQUENCY message listener
+            logger.info("Registering UPDATE_FREQUENCY message listener");
+            conn.RegisterListener(new MyUpdateFrequencyListener(dbConnector));
+
+
 
             // Register OBSERVATION message listener
-            logger.info("Registering the OBSERVATION message listener..");
-            conn.RegisterListener(new MyObservationsListener(dbConnector));
+            logger.info("Registering OBSERVATION message listener..");
+            conn.RegisterListener(new MyObservationsListener(dbConnector, conn));
+
+            // Register HISTORY_REQUEST message listener
+            logger.info("Registering HISTORY_REQUEST message listener..");
+            conn.RegisterListener(new MyHistoryRequestListener(dbConnector, conn));
 
             // Simulating ADD_NODE message for testing
             AddNode addNode = new AddNode();
@@ -96,40 +111,11 @@ public class DatanodeManager {
             obs.setLongitude(37.3394 );
             obs.setLatitude(-121.8938);
             conn.SendMessage(obs);
-//
-//            conn.RegisterListener(new AddNodeListener() {
-//                @Override
-//                public void HandleMessage(AddNode message) {
-//                    // insert AddNode data into User_Sensors table
-//                    System.out.println("Received AddNode messgae..");
-//                    UserSensorsConnector userSensorsConnector = new UserSensorsConnector();
-//                    UserSensors userSensors = new UserSensors("admin", message.getNodeURL());
-//                    int i = userSensorsConnector.insertInto(userSensors);
-//
-//                    if(i!= DatanodeConstants.FAILURE)
-//                        System.out.println("Successfully added sensor node with url "+ message.getNodeURL() +" for user admin");
-//                }
-//            });
 
-//            conn.RegisterListener(new ObservationListener() {
-//                @Override
-//                public void HandleMessage(Observation message) {
-//                    //insert Observation into the Observations table
-//                    System.out.println("Received Observation data message..");
-//                    ObservationsConnector obsConn = new ObservationsConnector();
-//                    Observations obsData = new Observations();
-//                    obsData.setRaspberryNode(message.getRaspberryNode());
-//                    obsData.setSensorId(message.getSensor());
-//                    obsData.setObservationData(message.getObservation());
-//                    obsData.setObservationTime(DateTimeConversions.convertDateTimeToString(message.getTime()));
-//                    int flag = obsConn.insertInto(obsData);
-//
-//                    if(flag != DatanodeConstants.FAILURE)
-//                        System.out.println("Successfully added observavation for " +
-//                                "raspberry node " + obsData.getRaspberryNode() + " , sensor id "+ obsData.getSensorId());
-//                }
-//            });
+            // Simulating HISTORY_REQUEST message for testing
+            HistoryRequest msg = new HistoryRequest();
+
+
 
         }
-
 }

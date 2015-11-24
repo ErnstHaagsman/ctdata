@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Metadata extends RaspberryMessage {
+    private String nodeUrl;
     List<SensorMetadata> sensors = new LinkedList<SensorMetadata>();
 
     /**
@@ -18,10 +19,22 @@ public class Metadata extends RaspberryMessage {
         return sensors;
     }
 
+    public String getNodeUrl() {
+        return nodeUrl;
+    }
+
+    public void setNodeUrl(String nodeUrl) {
+        this.nodeUrl = nodeUrl;
+    }
+
+    public void setSensors(List<SensorMetadata> sensors) {
+        this.sensors = sensors;
+    }
+
     @Override
     @JsonIgnore
     public String getRoutingKey() {
-        return String.format("notedata.meta.%s", getRaspberryNode());
+        return String.format("notedata.meta.%s", getNodeUrl());
     }
 
     @Override
