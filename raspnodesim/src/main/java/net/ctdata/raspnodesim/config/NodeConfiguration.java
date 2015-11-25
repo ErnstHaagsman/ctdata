@@ -17,6 +17,7 @@ import java.util.UUID;
 public class NodeConfiguration {
     private UUID nodeUUID;
     private List<Sensor> connectedSensors;
+    private int websocketPort;
 
     @JsonCreator
     public NodeConfiguration(@JsonProperty("nodeUUID") UUID nodeUUID){
@@ -30,6 +31,14 @@ public class NodeConfiguration {
 
     public List<Sensor> getConnectedSensors() {
         return connectedSensors;
+    }
+
+    public int getWebsocketPort() {
+        return websocketPort;
+    }
+
+    public void setWebsocketPort(int websocketPort) {
+        this.websocketPort = websocketPort;
     }
 
     public String toJSON() throws JsonProcessingException {

@@ -21,7 +21,7 @@ public class RaspNodeServer extends WebSocketServer implements DataListener {
     final NodeConfiguration configuration;
 
     public RaspNodeServer(ObservationCache cache, NodeConfiguration configuration){
-        super(new InetSocketAddress(8765));
+        super(new InetSocketAddress(configuration.getWebsocketPort()));
         this.cache = cache;
         this.configuration = configuration;
     }
