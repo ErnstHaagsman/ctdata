@@ -1,9 +1,6 @@
 package net.ctdata.common.Queue.Listeners;
 
-import net.ctdata.common.Messages.Confirmation;
 import net.ctdata.common.Messages.Metadata;
-
-import java.util.UUID;
 
 public abstract class MetadataListener extends AbstractQueueListener<Metadata> {
     String routingKey = "nodedata.meta.*";
@@ -18,9 +15,9 @@ public abstract class MetadataListener extends AbstractQueueListener<Metadata> {
     /**
      * Listens for metadata information for the specified node
      */
-    public MetadataListener(UUID raspberryNodeId) {
+    public MetadataListener(String nodeURL) {
         super(Metadata.class);
-        routingKey = String.format("nodedata.meta.%s", raspberryNodeId);
+        routingKey = String.format("nodedata.meta.%s", nodeURL);
     }
 
     @Override
