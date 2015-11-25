@@ -20,7 +20,6 @@ public class MetadataTest {
 
         SensorMetadata s1 = new SensorMetadata();
         s1.setSensor(45);
-        s1.setLastObservation(DateTime.now());
         s1.setLatitude(42.2353);
         s1.setLongitude(-123.535);
         s1.setName("Amazingly the random coordinates I picked are somewhere in a forest in NorCal");
