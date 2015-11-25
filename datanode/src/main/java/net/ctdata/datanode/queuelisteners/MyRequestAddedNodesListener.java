@@ -40,51 +40,45 @@ public class MyRequestAddedNodesListener extends RequestAddedNodesListener {
                 + " for interface type "+ message.getInterfaceType());
 
         AddedNodesMetadata response = new AddedNodesMetadata();
-        response.setRequestId(message.getRequestId());
 
         // Task #1
-        switch (message.getInterfaceType()){
-            case "Administrator":{
-                UserSensorsConnector userSensorConn = new UserSensorsConnector(this.dbConnector);
-                List<UserSensors> list = new ArrayList<UserSensors>();
-                try{
-                    list = userSensorConn.selectFrom(message.getUserId());
-                    if(list.size()>=1){
 
-
-                        }
-
-                    }
-                    else{
-                        logger.info("REQUEST_ADDED_NODES: No conected sensors for the user "+ message.getUserId());
-                    }
-
-                }catch (SQLException ex){
-                    logger.error("SQLException: Exception thrown while fetching data from the database due to "+ ex.getMessage());
-                }
-
-
+        UserSensorsConnector userSensorConn = new UserSensorsConnector(this.dbConnector);
+        List<UserSensors> list = new ArrayList<UserSensors>();
+        try{
+            if(message.getInterfaceType().equalsIgnoreCase("Administrator"))
+                list = userSensorConn.selectFrom(message.getUserId());
+            else if(message.getInterfaceType().equalsIgnoreCase("Public"))
+                list = userSensorConn.selectAll();
+            if(list.size()>=1){
+                response = getResponse(list);
+                response.setRequestId(message.getRequestId());
+                logger.info("REQUEST_ADDED_NODES: Sending the response message for request Id "+ response.getRequestId());
+                conn.SendMessage(response);
             }
-            case "Public":{
-
+            else{
+                logger.info("REQUEST_ADDED_NODES: No conected sensors for the user "+ message.getUserId());
             }
-            case default: {
-
-            }
+        }catch (SQLException ex){
+            logger.error("SQLException: Exception thrown while fetching data from the database due to "+ ex.getMessage());
         }
+
     }
 
     public AddedNodesMetadata getResponse(List<UserSensors> list){
 
         if(list!=null){
             try{
+                AddedNodesMetadata response = new AddedNodesMetadata();
                 RaspberryNodesConnector raspConn = new RaspberryNodesConnector(this.dbConnector);
                 SensorsConnector senConn = new SensorsConnector(this.dbConnector);
-                List<Sensors> sensors = new ArrayList<Sensors>();
+                List<Metadata> metaAddedNodes = new ArrayList<Metadata>();
+
                 for(UserSensors eachNode: list) {
                     RaspberryNodes node = new RaspberryNodes();
                     node.setRaspberryUrl(eachNode.getRaspberryUrl());
                     RaspberryNodes nodeInfo = raspConn.selectFrom(node);
+                    List<Sensors> sensors = new ArrayList<Sensors>();
                     sensors = senConn.selectFrom(nodeInfo.getRaspberryNode());
 
                     Metadata metanode = new Metadata();
@@ -101,10 +95,18 @@ public class MyRequestAddedNodesListener extends RequestAddedNodesListener {
                         metaSensor.setLongitude(eachSensor.getLongitude());
                         metaSensorLists.add(metaSensor);
                     }
+                    metanode.setSensors(metaSensorLists);
+                    metaAddedNodes.add(metanode);
                 }
+
+                response.setRaspberryNodes(metaAddedNodes);
+                return response;
             }catch(SQLException ex){
                 logger.error("SQLException: Exception thrown while fetching data from the database due to "+ ex.getMessage());
+                return null;
             }
         }
+        else
+            return null;
     }
 }

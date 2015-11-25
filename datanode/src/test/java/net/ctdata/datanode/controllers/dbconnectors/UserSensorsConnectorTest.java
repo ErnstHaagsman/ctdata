@@ -65,8 +65,7 @@ public class UserSensorsConnectorTest {
     public void updateTest() throws SQLException{
         UserSensors userSensors = new UserSensors("root", this.raspberryNodeUrlTwo);
         int i = this.userSensorConn.insertInto(userSensors);
-        userSensors.setRaspberryUrl(this.raspberryNodeUrlThree);
-        i = this.userSensorConn.updateFrom(userSensors, this.raspberryNodeUrlTwo);
+        i = this.userSensorConn.updateFrom(userSensors);
         assertTrue(i==1);
     }
 
