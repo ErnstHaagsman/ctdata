@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * Created by aditi on 19/11/15.
@@ -28,6 +29,13 @@ public class MyObservationsListener extends ObservationListener {
         this.queueConn = queueConn;
     }
 
+    public MyObservationsListener(DatabaseConnector dbConnector, RabbitMqConnection queueConn,
+                                  UUID raspberryNodeId, int sensor){
+        super(raspberryNodeId, sensor);
+        this.dbConnector = dbConnector;
+        this.queueConn = queueConn;
+    }
+
     @Override
     public void HandleMessage(Observation message) {
         // Tasks to be done
@@ -35,7 +43,7 @@ public class MyObservationsListener extends ObservationListener {
         // Task #2: acknowledge storing the observation data
 
         //insert Observation into the Observations table
-        logger.info("OBSERVATION: Received Observation data message from the raspberry node " + message.getRaspberryNode() + " and the sensor Id " + message.getSensor());
+        logger.debug("OBSERVATION: Received Observation data message from the raspberry node " + message.getRaspberryNode() + " and the sensor Id " + message.getSensor());
         ObservationsConnector obsConn = new ObservationsConnector(this.dbConnector);
         Observations obsData = new Observations();
         obsData.setRaspberryNode(message.getRaspberryNode());
@@ -50,7 +58,7 @@ public class MyObservationsListener extends ObservationListener {
             if(i == DatanodeConstants.FAILURE)
                 logger.error("OBSERVATION: Failed to add the observation for the received message");
             else {
-                logger.info("OBSERVATION: Successfully inserted data into the database for the received messgae from the raspberry node " +
+                logger.debug("OBSERVATION: Successfully inserted data into the database for the received messgae from the raspberry node " +
                         message.getRaspberryNode() + " and the sensor Id " + message.getSensor());
 
                 // acknowledge storing the observation data
@@ -63,7 +71,7 @@ public class MyObservationsListener extends ObservationListener {
                     confirmation.setRaspberryNode(message.getRaspberryNode());
                     confirmation.setSensor(message.getSensor());
                     confirmation.setTime(DateTime.now());
-                    logger.info("OBSERVATION: Sending ACK message for the received message");
+                    logger.debug("OBSERVATION: Sending ACK message for the received message");
                     queueConn.SendMessage(confirmation);
                 }
             }

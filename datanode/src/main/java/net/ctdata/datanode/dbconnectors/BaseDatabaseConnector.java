@@ -38,7 +38,7 @@ public class BaseDatabaseConnector implements DatabaseConnector{
                 return DatanodeConstants.SUCCESS;
             }
             else {
-                logger.error("Connection not yet established..keep trying");
+                logger.error("Connection not yet established..");
                 return DatanodeConstants.FAILURE;
             }
     }

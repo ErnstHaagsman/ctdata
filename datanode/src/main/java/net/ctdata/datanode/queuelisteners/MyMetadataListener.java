@@ -3,6 +3,7 @@ package net.ctdata.datanode.queuelisteners;
 import net.ctdata.common.Messages.Metadata;
 import net.ctdata.common.Messages.Partial.SensorMetadata;
 import net.ctdata.common.Queue.Listeners.MetadataListener;
+import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.datanode.dataresources.RaspberryNodes;
 import net.ctdata.datanode.dataresources.Sensors;
 import net.ctdata.datanode.dbconnectors.DatabaseConnector;
@@ -21,14 +22,17 @@ public class MyMetadataListener extends MetadataListener {
 
     static Logger logger = Logger.getLogger(MyMetadataListener.class);
     private DatabaseConnector dbConnector;
+    private RabbitMqConnection queueConn;
 
-    public MyMetadataListener(DatabaseConnector dbConnector){
+    public MyMetadataListener(RabbitMqConnection queueConn, DatabaseConnector dbConnector){
         super();
+        this.queueConn = queueConn;
         this.dbConnector = dbConnector;
     }
 
-    public MyMetadataListener(String nodeUrl, DatabaseConnector dbConnector){
+    public MyMetadataListener(String nodeUrl, RabbitMqConnection queueConn, DatabaseConnector dbConnector){
         super(nodeUrl);
+        this.queueConn = queueConn;
         this.dbConnector = dbConnector;
     }
 
@@ -37,7 +41,8 @@ public class MyMetadataListener extends MetadataListener {
         // Tasks to be done
         // Task #1: update raspberry_node in Raspberry_Nodes table
         // Task #2: insert metadata into Sensors table
-        logger.info("METADATA: Received message for raspberry node Id "+ message.getRaspberryNode() +" and raspberry url "+ message.getNodeUrl());
+        // Task #3: Register observation listener for each sensor
+        logger.debug("METADATA: Received message for raspberry node Id "+ message.getRaspberryNode() +" and raspberry url "+ message.getNodeUrl());
 
         // Task #1: update raspberry_node in Raspberry_Nodes table
         RaspberryNodesConnector raspConn = new RaspberryNodesConnector(dbConnector);
@@ -49,7 +54,7 @@ public class MyMetadataListener extends MetadataListener {
             if(i == DatanodeConstants.FAILURE)
                 logger.error("METADATA: Failed to record raspberry node Id for the raspberry url "+ message.getNodeUrl());
             else
-                logger.info("METADATA: Successfully inserted raspberry node Id for the raspberry url "+ message.getNodeUrl());
+                logger.debug("METADATA: Successfully inserted raspberry node Id for the raspberry url "+ message.getNodeUrl());
         }catch (SQLException ex){
             logger.error("METADATA: SQLException thrown while inserting data into the database due to "+ ex.getMessage());
         }
@@ -74,7 +79,12 @@ public class MyMetadataListener extends MetadataListener {
                         break;
                     }
                     else {
-                        logger.info("METADATA: Successfully inserted sensor metadata for sensor Id "+ sensor.getSensorId() +" and raspberry url "+ message.getNodeUrl());
+                        logger.debug("METADATA: Successfully inserted sensor metadata for sensor Id "+ sensor.getSensorId() +" and raspberry url "+ message.getNodeUrl());
+                        // Task #3: Register observation listener for each sensor
+                        logger.debug("Registering Observations listener for raspberry node " + message.getRaspberryNode()
+                            + " and sensor Id "+ s.getSensor());
+                        this.queueConn.RegisterListener(new MyObservationsListener(this.dbConnector,
+                                this.queueConn, message.getRaspberryNode(), s.getSensor()));
                         continue;
                     }
                 }catch (SQLException ex){

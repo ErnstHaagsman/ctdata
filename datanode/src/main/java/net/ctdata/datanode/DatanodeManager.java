@@ -1,16 +1,11 @@
 package net.ctdata.datanode;
 
-import net.ctdata.common.Messages.AddNode;
-import net.ctdata.common.Messages.HistoryRequest;
-import net.ctdata.common.Messages.Observation;
 import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.datanode.dbconnectors.BaseDatabaseConnector;
 import net.ctdata.datanode.dbconnectors.DatabaseConnector;
 import net.ctdata.datanode.queuelisteners.*;
-import net.ctdata.datanode.utility.DatanodeConstants;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +14,6 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Properties;
-import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 
@@ -54,16 +48,14 @@ public class DatanodeManager {
             // Initialising the database connection
             dbConnector = new BaseDatabaseConnector(properties);
 
-            // Establishing the database connection - The server will keep trying to connect to the database until a connection is setup
-            int success;
-            do{
-                try {
-                    success = dbConnector.establishConnection();
-                }catch (SQLException ex){
-                    logger.error("SQLException thrown while connecting to the database due to " + ex.getMessage());
-                    success = DatanodeConstants.FAILURE;
-                }
-            }while(success == DatanodeConstants.FAILURE);
+            // Establishing the database connection
+            try {
+                dbConnector.establishConnection();
+            }catch (SQLException ex){
+                logger.error("SQLException thrown while connecting to the database due to " + ex.getMessage());
+                logger.info("Stoping server..");
+                System.exit(1);
+            }
 
             //fetching the rabbitMQ connection properties
             logger.info("Setting up the RabbitMQ connection..");
@@ -75,47 +67,28 @@ public class DatanodeManager {
             conn = new RabbitMqConnection(properties.getProperty("rabbitmqUrl"));
 
             // Register ADD_NODE message listener
-            logger.info("Registering ADD_NODE message listener..");
+            logger.debug("Registering ADD_NODE message listener..");
             conn.RegisterListener(new MyAddNodeListener(conn, dbConnector));
 
             // Register CONNECT message listener
-            logger.info("Registering CONNECT message listener..");
+            logger.debug("Registering CONNECT message listener..");
             conn.RegisterListener(new MyConnectListener(conn, dbConnector));
 
-            // Register UPDATE_FREQUENCY message listener
-            logger.info("Registering UPDATE_FREQUENCY message listener");
-            conn.RegisterListener(new MyUpdateFrequencyListener(dbConnector));
-
-
-
-            // Register OBSERVATION message listener
-            logger.info("Registering OBSERVATION message listener..");
-            conn.RegisterListener(new MyObservationsListener(dbConnector, conn));
-
             // Register HISTORY_REQUEST message listener
-            logger.info("Registering HISTORY_REQUEST message listener..");
+            logger.debug("Registering HISTORY_REQUEST message listener..");
             conn.RegisterListener(new MyHistoryRequestListener(dbConnector, conn));
 
-            // Simulating ADD_NODE message for testing
-            AddNode addNode = new AddNode();
-            addNode.setUserId("admin");
-            addNode.setNodeURL(UUID.randomUUID()+"/raspberry.net");
-            conn.SendMessage(addNode);
+            // Register UPDATE_FREQUENCY message listener
+            logger.debug("Registering UPDATE_FREQUENCY message listener");
+            conn.RegisterListener(new MyUpdateFrequencyListener(dbConnector));
 
-            // Simulating OBSERVATION message for testing
-            Observation obs = new Observation();
-            obs.setRaspberryNode(UUID.randomUUID());
-            obs.setSensor(1);
-            obs.setObservation(115.45);
-            obs.setTime(DateTime.now());
-            obs.setLongitude(37.3394 );
-            obs.setLatitude(-121.8938);
-            conn.SendMessage(obs);
+            // Register REQUEST_ADDED_NODES message listener
+            logger.debug("Registering REQUEST_ADDED_NODES message listener");
+            conn.RegisterListener(new MyRequestAddedNodesListener(conn, dbConnector));
 
-            // Simulating HISTORY_REQUEST message for testing
-            HistoryRequest msg = new HistoryRequest();
-
-
+            // Register REQUEST_NODES message listener
+            logger.debug("Registering REQUEST_NODES message listener");
+            conn.RegisterListener(new MyRequestNodesListener(conn, dbConnector));
 
         }
 }

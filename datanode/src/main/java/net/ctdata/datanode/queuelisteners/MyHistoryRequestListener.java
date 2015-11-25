@@ -32,7 +32,7 @@ public class MyHistoryRequestListener extends HistoryRequestListener {
     @Override
     public void HandleMessage(HistoryRequest message) {
 
-        logger.info("HISTORY_REQUEST: Received history data request for the raspberry_node "+ message.getRaspberryNode()
+        logger.debug("HISTORY_REQUEST: Received history data request for the raspberry_node "+ message.getRaspberryNode()
                     + " and sensor Id "+ message.getSensor());
         HistoryResponse response = new HistoryResponse();
         response.setRequestId(message.getRequestID());
@@ -48,7 +48,7 @@ public class MyHistoryRequestListener extends HistoryRequestListener {
             list = obsConn.selectBetween(obs, message.getTimePeriod());
             if(list!=null){
                 if(list.size()>0){
-                    logger.info("HISTORY_REQUEST: Fetched observation data successfully!!");
+                    logger.debug("HISTORY_REQUEST: Fetched observation data successfully!!");
                     List<Observation> returnList = new ArrayList<Observation>();
                     for(Observations o : list){
                         Observation observation = new Observation();
@@ -61,14 +61,14 @@ public class MyHistoryRequestListener extends HistoryRequestListener {
                         returnList.add(observation);
                     }
                     response.setObservations(returnList);
-                    logger.info("HISTORY_RESPONSE: Sending response message..");
+                    logger.debug("HISTORY_RESPONSE: Sending response message..");
                     queueConn.SendMessage(response);
                 }
             }
             else{
                 logger.error("HISTORY_REQUEST: No history observation data fetched!!");
                 response.setObservations(null);
-                logger.info("HISTORY_RESPONSE: Sending response message with empty list..");
+                logger.debug("HISTORY_RESPONSE: Sending response message with empty list..");
                 queueConn.SendMessage(response);
             }
 

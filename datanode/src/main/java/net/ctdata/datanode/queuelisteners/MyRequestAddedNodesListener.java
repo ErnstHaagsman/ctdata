@@ -36,7 +36,7 @@ public class MyRequestAddedNodesListener extends RequestAddedNodesListener {
     @Override
     public void HandleMessage(RequestAddedNodes message) {
 
-        logger.info("REQUEST_ADDED_NODES: Received " + message.getRequestId() +" request from user "+ message.getUserId()
+        logger.debug("REQUEST_ADDED_NODES: Received " + message.getRequestId() +" request from user "+ message.getUserId()
                 + " for interface type "+ message.getInterfaceType());
 
         AddedNodesMetadata response = new AddedNodesMetadata();
@@ -53,16 +53,15 @@ public class MyRequestAddedNodesListener extends RequestAddedNodesListener {
             if(list.size()>=1){
                 response = getResponse(list);
                 response.setRequestId(message.getRequestId());
-                logger.info("REQUEST_ADDED_NODES: Sending the response message for request Id "+ response.getRequestId());
+                logger.debug("REQUEST_ADDED_NODES: Sending the response message for request Id "+ response.getRequestId());
                 conn.SendMessage(response);
             }
             else{
-                logger.info("REQUEST_ADDED_NODES: No conected sensors for the user "+ message.getUserId());
+                logger.debug("REQUEST_ADDED_NODES: No connected sensors for the interface type " + message.getInterfaceType());
             }
         }catch (SQLException ex){
             logger.error("SQLException: Exception thrown while fetching data from the database due to "+ ex.getMessage());
         }
-
     }
 
     public AddedNodesMetadata getResponse(List<UserSensors> list){

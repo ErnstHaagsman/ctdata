@@ -28,7 +28,7 @@ public class MyConnectListener extends ConnectListener {
     public void HandleMessage(Connect message) {
         // insert the connect message information into the Raspberry_Nodes table to be used by the Orchestration server
         // for determining free gateway Ids.
-        logger.info("CONNECT: Received connect message for raspberry url "+ message.getNodeURL());
+        logger.debug("CONNECT: Received connect message for raspberry url "+ message.getNodeURL());
         RaspberryNodesConnector raspConn = new RaspberryNodesConnector(this.dbConnector);
         RaspberryNodes raspNode = new RaspberryNodes();
         raspNode.setGatewayId(message.getGatewayId());
@@ -39,14 +39,14 @@ public class MyConnectListener extends ConnectListener {
             if(i == DatanodeConstants.FAILURE)
                 logger.error("CONNECT: Failed to record connection data for the raspberry url "+ message.getNodeURL());
             else
-                logger.info("CONNECT: Successfully inserted connection data for the raspberry url "+ message.getNodeURL());
+                logger.debug("CONNECT: Successfully inserted connection data for the raspberry url "+ message.getNodeURL());
         }catch (SQLException ex){
             logger.error("CONNECT: SQLException thrown while inserting data into the database due to "+ ex.getMessage());
         }
 
         // Upon reception of CONNECT message, register MyMetadataListener to listen to METADATA for the corresponding <raspberry_url>
         // this is preferred to avoid listening to all METADATA messages on network
-        logger.info("Registering METADATA message listener for raspberry url "+ message.getNodeURL());
-        this.queueConn.RegisterListener(new MyMetadataListener(message.getNodeURL(), this.dbConnector));
+        logger.debug("Registering METADATA message listener for raspberry url "+ message.getNodeURL());
+        this.queueConn.RegisterListener(new MyMetadataListener(message.getNodeURL(), this.queueConn, this.dbConnector));
     }
 }

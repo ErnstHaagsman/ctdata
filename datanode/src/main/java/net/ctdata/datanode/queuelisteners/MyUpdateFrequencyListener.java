@@ -25,7 +25,7 @@ public class MyUpdateFrequencyListener extends UpdateFrequencyListener{
     @Override
     public void HandleMessage(UpdateFrequency message) {
         // update the Polling_Frequency column in Sensors table
-        logger.info("UPDATE_FREQUENCY: Received the message for raspberry node "+
+        logger.debug("UPDATE_FREQUENCY: Received the message for raspberry node "+
                 message.getRaspberryNode()+ " and sensor Id "+ message.getSensor());
 
         SensorsConnector sensorConn = new SensorsConnector(this.dbConnector);
@@ -40,7 +40,7 @@ public class MyUpdateFrequencyListener extends UpdateFrequencyListener{
                 logger.error("UPDATE_FREQUENCY: Failed to update the polling frequency of "+
                         message.getRaspberryNode()+ " and sensor Id "+ message.getSensor());
             else
-                logger.info("UPDATE_FREQUENCY: Successfully updated the polling frequency "+
+                logger.debug("UPDATE_FREQUENCY: Successfully updated the polling frequency "+
                         message.getRaspberryNode()+ " and sensor Id "+ message.getSensor());
         }catch (SQLException ex){
             logger.error("UPDATE_FREQUENCY: SQLException thrown while updating data into the database due to "+ ex.getMessage());
