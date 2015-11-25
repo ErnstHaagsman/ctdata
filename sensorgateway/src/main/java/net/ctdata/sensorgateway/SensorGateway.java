@@ -10,6 +10,7 @@ import net.ctdata.sensorgateway.config.CliOptions;
 import net.ctdata.sensorgateway.config.GatewayConfiguration;
 import net.ctdata.sensorgateway.websocket.RaspNodeClient;
 import org.apache.commons.cli.*;
+import org.apache.log4j.BasicConfigurator;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,11 +21,14 @@ import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
 
 public class SensorGateway {
     public static void main(String[] args) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
         CommandLineParser parser = new DefaultParser();
         Options options = CliOptions.getOptions();
+
+        BasicConfigurator.configure();
 
         GatewayConfiguration configuration = null;
 
