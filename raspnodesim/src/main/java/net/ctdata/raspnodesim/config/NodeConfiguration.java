@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ctdata.common.Json.MapperSingleton;
+import net.ctdata.common.Messages.Metadata;
 import net.ctdata.raspnodesim.sensors.Sensor;
 
 import java.io.File;
@@ -33,6 +34,14 @@ public class NodeConfiguration {
 
     public String toJSON() throws JsonProcessingException {
         return new MapperSingleton().getMapper().writeValueAsString(this);
+    }
+
+    public Metadata getMetadata(){
+        Metadata metadata = new Metadata();
+        metadata.setRaspberryNode(nodeUUID);
+        for (Sensor sensor : connectedSensors)
+            metadata.getSensors().add(sensor.getMetadata());
+        return metadata;
     }
 
     public static NodeConfiguration fromJSON(String json) throws IOException {

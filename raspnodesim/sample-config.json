@@ -6,14 +6,18 @@
       "pollingInterval": 5000,
       "number": 1,
       "latitude": 37.335571,
-      "longitude": -121.884661
+      "longitude": -121.884661,
+      "name": "Random Library Sensor",
+      "type": "rainfall"
     },
     {
       "sensorType": "net.ctdata.raspnodesim.sensors.RandomZeroHundredSensor",
       "pollingInterval": 3000,
       "number": 2,
       "latitude": 37.337079,
-      "longitude": -121.878867
+      "longitude": -121.878867,
+      "name": "Random BBC Sensor",
+      "type": "rainfall"
     }
   ]
 }
