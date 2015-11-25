@@ -3,6 +3,7 @@ package net.ctdata.sensorgateway;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ctdata.common.Json.MapperSingleton;
 import net.ctdata.common.Messages.Connect;
+import net.ctdata.common.Messages.RequestNodes;
 import net.ctdata.common.Queue.Listeners.ConnectListener;
 import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.sensorgateway.config.CliOptions;
@@ -49,6 +50,11 @@ public class SensorGateway {
 
         final RabbitMqConnection conn = new RabbitMqConnection(configuration.getRabbitMqUrl());
         final List<RaspNodeClient> connectedNodes = new LinkedList<RaspNodeClient>();
+
+        // Request the nodes this sensor gateway should connect to
+        RequestNodes rn = new RequestNodes();
+        rn.setGatewayId(configuration.getGatewayID());
+        conn.SendMessage(rn);
 
         conn.RegisterListener(new ConnectListener() {
             @Override
