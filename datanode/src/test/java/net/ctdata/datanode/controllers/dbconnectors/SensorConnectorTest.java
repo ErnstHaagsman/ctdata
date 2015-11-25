@@ -4,7 +4,6 @@ import net.ctdata.datanode.dataresources.Sensors;
 import net.ctdata.datanode.dbconnectors.BaseDatabaseConnector;
 import net.ctdata.datanode.dbconnectors.DatabaseConnector;
 import net.ctdata.datanode.dbconnectors.SensorsConnector;
-import net.ctdata.datanode.utility.DateTimeConversions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +11,10 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
 
@@ -52,7 +53,7 @@ public class SensorConnectorTest {
     public void insertTest() throws SQLException{
 
         Sensors sensor = new Sensors(this.raspberryNodeIdOne, 1, "Alpha", "Temperature", 1000,
-                DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), 37.3394 , -121.8938);
+                37.3394 , -121.8938);
 
         int i = this.sensorsConn.insertInto(sensor);
         assertTrue(i==1);
@@ -62,11 +63,11 @@ public class SensorConnectorTest {
     public void updateTest() throws SQLException{
 
         Sensors sensor = new Sensors(this.raspberryNodeIdTwo, 1, "Alpha", "Temperature", 2000,
-                DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), 37.3394 , -121.8938);
+                 37.3394 , -121.8938);
 
         int i = this.sensorsConn.insertInto(sensor);
 
-        sensor.setLastObservationTime(DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())));
+        sensor.setPollingFrequency(500);
 
         i = this.sensorsConn.updateFrom(sensor);
         assertTrue(i==1);
@@ -76,7 +77,7 @@ public class SensorConnectorTest {
     @Test
     public void deleteTest() throws SQLException{
         Sensors sensor = new Sensors(this.raspberryNodeIdOne, 2, "Beta", "Temperature", 1500,
-                DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), 37.3394 , -121.8938);
+                 37.3394 , -121.8938);
 
         int i = this.sensorsConn.insertInto(sensor);
 
@@ -87,12 +88,12 @@ public class SensorConnectorTest {
     @Test
     public void selectAll() throws SQLException{
         Sensors sensor = new Sensors(this.raspberryNodeIdOne, 3, "Gamma", "Temperature", 1500,
-                DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), 37.3394 , -121.8938);
+                 37.3394 , -121.8938);
 
         int i = this.sensorsConn.insertInto(sensor);
 
         sensor = new Sensors(this.raspberryNodeIdTwo, 2, "Yeta", "Temperature", 1800,
-                DateTimeConversions.getSQLTimestampString(new Timestamp(new Date().getTime())), 37.3394 , -121.8938);
+                 37.3394 , -121.8938);
 
         i = this.sensorsConn.insertInto(sensor);
 

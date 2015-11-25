@@ -2,7 +2,6 @@ package net.ctdata.datanode.dbconnectors;
 
 import net.ctdata.datanode.dataresources.Sensors;
 import net.ctdata.datanode.utility.DatanodeConstants;
-import net.ctdata.datanode.utility.DateTimeConversions;
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
@@ -28,8 +27,7 @@ public class SensorsConnector{
     public int insertInto(Sensors sensor) throws SQLException{
 
         this.query = "INSERT INTO Sensors VALUES ('" + sensor.getRaspberryNode() + "', " + sensor.getSensorId() + ", " + sensor.getPollingFrequency()
-                        + ", '" + sensor.getType() + "', " + sensor.getLatitude() + ", " + sensor.getLongitude() + ", '" + sensor.getLastObservationTime()
-                            + "', '" + sensor.getSensorName() + "')";
+                        + ", '" + sensor.getType() + "', " + sensor.getLatitude() + ", " + sensor.getLongitude() + ", '" + sensor.getSensorName() + "')";
 
         Integer count = (Integer) dbConnector.executeQuery(this.query, DatanodeConstants.INSERT_FLAG);
         if(count != null)
@@ -80,7 +78,6 @@ public class SensorsConnector{
                 sensor.setSensorName(result.getString("Sensor_Name"));
                 sensor.setType(result.getString("Type"));
                 sensor.setPollingFrequency(result.getInt("Polling_Frequency"));
-                sensor.setLastObservationTime(DateTimeConversions.getSQLTimestampString(result.getTimestamp("Last_Observation_Time")));
                 sensor.setLongitude(result.getDouble("Longitude"));
                 sensor.setLatitude(result.getDouble("Longitude"));
 
@@ -106,7 +103,6 @@ public class SensorsConnector{
                 sensor.setSensorName(result.getString("Sensor_Name"));
                 sensor.setType(result.getString("Type"));
                 sensor.setPollingFrequency(result.getInt("Polling_Frequency"));
-                sensor.setLastObservationTime(DateTimeConversions.getSQLTimestampString(result.getTimestamp("Last_Observation_Time")));
                 sensor.setLongitude(result.getDouble("Longitude"));
                 sensor.setLatitude(result.getDouble("Longitude"));
 

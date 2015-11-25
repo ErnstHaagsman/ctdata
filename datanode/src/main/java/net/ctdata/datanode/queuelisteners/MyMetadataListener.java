@@ -10,7 +10,6 @@ import net.ctdata.datanode.dbconnectors.DatabaseConnector;
 import net.ctdata.datanode.dbconnectors.RaspberryNodesConnector;
 import net.ctdata.datanode.dbconnectors.SensorsConnector;
 import net.ctdata.datanode.utility.DatanodeConstants;
-import net.ctdata.datanode.utility.DateTimeConversions;
 import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
@@ -69,7 +68,6 @@ public class MyMetadataListener extends MetadataListener {
                 sensor.setSensorName(s.getName());
                 sensor.setType(s.getType());
                 sensor.setPollingFrequency(s.getPollingInterval());
-                sensor.setLastObservationTime(DateTimeConversions.convertDateTimeToString(s.getLastObservation()));
                 sensor.setLatitude(s.getLatitude());
                 sensor.setLongitude(s.getLongitude());
                 try {

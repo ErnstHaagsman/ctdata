@@ -13,20 +13,18 @@ public class Sensors {
     private String sensorName;
     private String type;
     private int pollingFrequency;
-    private String lastObservationTime;
     private Double latitude;
     private Double longitude;
 
     public Sensors() {
     }
 
-    public Sensors(UUID raspberryNode, int sensorId, String sensorName, String type, int pollingFrequency, String lastObservationTime, Double latitude, Double longitude) {
+    public Sensors(UUID raspberryNode, int sensorId, String sensorName, String type, int pollingFrequency, Double latitude, Double longitude) {
         this.raspberryNode = raspberryNode;
         this.sensorId = sensorId;
         this.sensorName = sensorName;
         this.type = type;
         this.pollingFrequency = pollingFrequency;
-        this.lastObservationTime = lastObservationTime;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -69,14 +67,6 @@ public class Sensors {
 
     public void setPollingFrequency(int pollingFrequency) {
         this.pollingFrequency = pollingFrequency;
-    }
-
-    public String getLastObservationTime() {
-        return lastObservationTime;
-    }
-
-    public void setLastObservationTime(String lastObservationTime) {
-        this.lastObservationTime = lastObservationTime;
     }
 
     public Double getLatitude() {
