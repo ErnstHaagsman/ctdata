@@ -21,7 +21,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Logger;
 
 public class SensorGateway {
     public static void main(String[] args) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
@@ -64,7 +63,6 @@ public class SensorGateway {
             @Override
             public void HandleMessage(Connect message) {
                 RaspNodeClient client = new RaspNodeClient(URI.create(message.getNodeURL()), conn);
-                client.connect();
                 connectedNodes.add(client);
             }
         });
