@@ -45,7 +45,7 @@ public class RaspNodeSim {
 
         ObservationCache cache = new MemoryCache();
 
-        RaspNodeServer websocketServer = new RaspNodeServer(cache);
+        RaspNodeServer websocketServer = new RaspNodeServer(cache, configuration);
         websocketServer.start();
 
         router.AddListener(new ConsoleListener());

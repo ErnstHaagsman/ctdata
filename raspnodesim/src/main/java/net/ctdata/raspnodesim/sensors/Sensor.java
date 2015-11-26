@@ -3,6 +3,7 @@ package net.ctdata.raspnodesim.sensors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import net.ctdata.common.Messages.Observation;
+import net.ctdata.common.Messages.Partial.SensorMetadata;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 
@@ -19,6 +20,9 @@ public interface Sensor {
     @JsonIgnore
     DateTime getNextObservationTime();
 
+    @JsonIgnore
+    SensorMetadata getMetadata();
+    
     void advanceObservationTime();
 
     /**
@@ -33,4 +37,8 @@ public interface Sensor {
     void setLatitude(double latitude);
     double getLongitude();
     void setLongitude(double longitude);
+    String getType();
+    void setType(String type);
+    String getName();
+    void setName(String name);
 }

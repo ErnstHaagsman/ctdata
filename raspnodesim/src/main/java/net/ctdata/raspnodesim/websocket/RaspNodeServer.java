@@ -5,6 +5,7 @@ import net.ctdata.common.Messages.Abstract.AbstractMessage;
 import net.ctdata.common.Messages.Confirmation;
 import net.ctdata.common.Messages.Observation;
 import net.ctdata.raspnodeprotocol.WebsocketMessage;
+import net.ctdata.raspnodesim.config.NodeConfiguration;
 import net.ctdata.raspnodesim.observationcache.ObservationCache;
 import net.ctdata.raspnodesim.router.DataListener;
 import org.java_websocket.WebSocket;
@@ -17,15 +18,22 @@ import java.util.Collection;
 
 public class RaspNodeServer extends WebSocketServer implements DataListener {
     final ObservationCache cache;
+    final NodeConfiguration configuration;
 
-    public RaspNodeServer(ObservationCache cache){
-        super(new InetSocketAddress(8765));
+    public RaspNodeServer(ObservationCache cache, NodeConfiguration configuration){
+        super(new InetSocketAddress(configuration.getWebsocketPort()));
         this.cache = cache;
+        this.configuration = configuration;
     }
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        cache.GetObservations(this);
+        try {
+            conn.send(new WebsocketMessage(configuration.getMetadata()).toJson());
+            cache.GetObservations(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
