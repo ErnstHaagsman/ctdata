@@ -8,8 +8,23 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Metadata extends RaspberryMessage {
-    private String nodeUrl;
     List<SensorMetadata> sensors = new LinkedList<SensorMetadata>();
+    private String nodeURL;
+
+    /**
+     * The URL that this raspberry node is currently connected at
+     * @return {String}
+     */
+    public String getNodeURL() {
+        return nodeURL;
+    }
+
+    /**
+     * @see {@link Metadata#getNodeURL()}
+     */
+    public void setNodeURL(String nodeURL) {
+        this.nodeURL = nodeURL;
+    }
 
     /**
      * The metadata of all sensors connected to this Raspberry Pi node
@@ -19,14 +34,10 @@ public class Metadata extends RaspberryMessage {
         return sensors;
     }
 
-    public String getNodeUrl() {
-        return nodeUrl;
-    }
-
-    public void setNodeUrl(String nodeUrl) {
-        this.nodeUrl = nodeUrl;
-    }
-
+    /**
+     * The metadata of all sensors connected to this Raspberry Pi node
+     * @param  {List<SensorMetadata>}
+     */
     public void setSensors(List<SensorMetadata> sensors) {
         this.sensors = sensors;
     }
@@ -34,7 +45,7 @@ public class Metadata extends RaspberryMessage {
     @Override
     @JsonIgnore
     public String getRoutingKey() {
-        return String.format("notedata.meta.%s", getNodeUrl());
+        return String.format("notedata.meta.%s", getNodeURL());
     }
 
     @Override

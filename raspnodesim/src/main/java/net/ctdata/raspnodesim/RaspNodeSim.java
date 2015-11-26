@@ -3,6 +3,9 @@ package net.ctdata.raspnodesim;
 import net.ctdata.raspnodesim.config.CliOptions;
 import net.ctdata.raspnodesim.config.NodeConfiguration;
 import net.ctdata.raspnodesim.datacollection.CollectionThread;
+import net.ctdata.raspnodesim.observationcache.CacheListener;
+import net.ctdata.raspnodesim.observationcache.MemoryCache;
+import net.ctdata.raspnodesim.observationcache.ObservationCache;
 import net.ctdata.raspnodesim.router.ConsoleListener;
 import net.ctdata.raspnodesim.router.DataRouter;
 import net.ctdata.raspnodesim.websocket.RaspNodeServer;
@@ -40,11 +43,14 @@ public class RaspNodeSim {
 
         DataRouter router = new DataRouter();
 
-        RaspNodeServer websocketServer = new RaspNodeServer();
+        ObservationCache cache = new MemoryCache();
+
+        RaspNodeServer websocketServer = new RaspNodeServer(cache);
         websocketServer.start();
 
         router.AddListener(new ConsoleListener());
         router.AddListener(websocketServer);
+        router.AddListener(new CacheListener(cache));
 
         Thread collectionThread = new Thread(new CollectionThread(configuration, router));
         collectionThread.start();

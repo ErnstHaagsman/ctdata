@@ -57,9 +57,9 @@ public class MyAddNodeListener extends AddNodeListener {
                 try {
                     int j = userSensorsConnector.updateFrom(userSensors);
                     if(j == DatanodeConstants.FAILURE)
-                        logger.error("ADD_NODE - METADATA: Failed to update the connection flag for raspberry url "+ message.getNodeUrl());
+                        logger.error("ADD_NODE - METADATA: Failed to update the connection flag for raspberry url "+ message.getNodeURL());
                     else
-                        logger.debug("ADD_NODE - METADATA: Successfully updated the connection flag for raspberry url "+ message.getNodeUrl());
+                        logger.debug("ADD_NODE - METADATA: Successfully updated the connection flag for raspberry url "+ message.getNodeURL());
                 }catch (SQLException ex){
                     logger.error("ADD_NODE - METADATA: SQLException thrown while updating connection flag due to "+ ex.getMessage());
                 }

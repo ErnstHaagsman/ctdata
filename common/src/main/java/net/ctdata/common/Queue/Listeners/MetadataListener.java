@@ -15,9 +15,9 @@ public abstract class MetadataListener extends AbstractQueueListener<Metadata> {
     /**
      * Listens for metadata information for the specified node
      */
-    public MetadataListener(String nodeUrl) {
+    public MetadataListener(String nodeURL) {
         super(Metadata.class);
-        routingKey = String.format("nodedata.meta.%s", nodeUrl);
+        routingKey = String.format("nodedata.meta.%s", nodeURL);
     }
 
     @Override

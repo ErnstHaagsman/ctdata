@@ -41,19 +41,19 @@ public class MyMetadataListener extends MetadataListener {
         // Task #1: update raspberry_node in Raspberry_Nodes table
         // Task #2: insert metadata into Sensors table
         // Task #3: Register observation listener for each sensor
-        logger.debug("METADATA: Received message for raspberry node Id "+ message.getRaspberryNode() +" and raspberry url "+ message.getNodeUrl());
+        logger.debug("METADATA: Received message for raspberry node Id "+ message.getRaspberryNode() +" and raspberry url "+ message.getNodeURL());
 
         // Task #1: update raspberry_node in Raspberry_Nodes table
         RaspberryNodesConnector raspConn = new RaspberryNodesConnector(dbConnector);
         RaspberryNodes raspNode = new RaspberryNodes();
         raspNode.setRaspberryNode(message.getRaspberryNode());
-        raspNode.setRaspberryUrl(message.getNodeUrl());
+        raspNode.setRaspberryUrl(message.getNodeURL());
         try {
             int i = raspConn.updateFrom(raspNode);
             if(i == DatanodeConstants.FAILURE)
-                logger.error("METADATA: Failed to record raspberry node Id for the raspberry url "+ message.getNodeUrl());
+                logger.error("METADATA: Failed to record raspberry node Id for the raspberry url "+ message.getNodeURL());
             else
-                logger.debug("METADATA: Successfully inserted raspberry node Id for the raspberry url "+ message.getNodeUrl());
+                logger.debug("METADATA: Successfully inserted raspberry node Id for the raspberry url "+ message.getNodeURL());
         }catch (SQLException ex){
             logger.error("METADATA: SQLException thrown while inserting data into the database due to "+ ex.getMessage());
         }
@@ -73,11 +73,11 @@ public class MyMetadataListener extends MetadataListener {
                 try {
                     int i = sensorConn.insertInto(sensor);
                     if(i == DatanodeConstants.FAILURE) {
-                        logger.error("METADATA: Failed to record metadata for raspberry url "+ message.getNodeUrl());
+                        logger.error("METADATA: Failed to record metadata for raspberry url "+ message.getNodeURL());
                         break;
                     }
                     else {
-                        logger.debug("METADATA: Successfully inserted sensor metadata for sensor Id "+ sensor.getSensorId() +" and raspberry url "+ message.getNodeUrl());
+                        logger.debug("METADATA: Successfully inserted sensor metadata for sensor Id "+ sensor.getSensorId() +" and raspberry url "+ message.getNodeURL());
                         // Task #3: Register observation listener for each sensor
                         logger.debug("Registering Observations listener for raspberry node " + message.getRaspberryNode()
                             + " and sensor Id "+ s.getSensor());
@@ -92,7 +92,7 @@ public class MyMetadataListener extends MetadataListener {
             }
         }
         else{
-            logger.error("METADATA: Received message has no metadata of the raspberry node with url "+ message.getNodeUrl());
+            logger.error("METADATA: Received message has no metadata of the raspberry node with url "+ message.getNodeURL());
         }
     }
 }

@@ -83,7 +83,7 @@ public class MyRequestAddedNodesListener extends RequestAddedNodesListener {
                     Metadata metanode = new Metadata();
                     List<SensorMetadata> metaSensorLists = new ArrayList<SensorMetadata>();
                     metanode.setRaspberryNode(nodeInfo.getRaspberryNode());
-                    metanode.setNodeUrl(nodeInfo.getRaspberryUrl());
+                    metanode.setNodeURL(nodeInfo.getRaspberryUrl());
                     for(Sensors eachSensor: sensors) {
                         SensorMetadata metaSensor = new SensorMetadata();
                         metaSensor.setSensor(eachSensor.getSensorId());
