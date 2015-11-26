@@ -38,6 +38,10 @@ public class HistoryResponse extends SensorMessage {
         return observations;
     }
 
+    public void setObservations(List<Observation> observations) {
+        this.observations = observations;
+    }
+
     @Override
     @JsonIgnore
     public String getRoutingKey() {

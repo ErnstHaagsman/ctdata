@@ -9,7 +9,7 @@ import java.sql.SQLException;
  */
 public interface DatabaseConnector {
 
-    int establishConnection(String configFilePath) throws SQLException;
+    int establishConnection() throws SQLException;
 
     Object executeQuery(String query, char flag) throws SQLException;
 

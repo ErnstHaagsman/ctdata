@@ -1,11 +1,8 @@
 package net.ctdata.datanode.dbconnectors;
 
 import net.ctdata.datanode.utility.DatanodeConstants;
+import org.apache.log4j.Logger;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
 
@@ -14,76 +11,49 @@ import java.util.Properties;
  * This class implements the interface DatabaseConnector for MYSQL database system
  */
 
-abstract public class BaseDatabaseConnector implements DatabaseConnector{
+public class BaseDatabaseConnector implements DatabaseConnector{
 
+    private static Logger logger = Logger.getLogger(BaseDatabaseConnector.class);
     private Connection conn;
     private Properties properties;
     private Statement stmt;
 
-    public BaseDatabaseConnector(){
-        this.properties = new Properties();
+    public BaseDatabaseConnector(Properties dbProperties){
+        this.properties = dbProperties;
     }
 
-    /*
-    * Used to set database properties
-    * See: http://www.mkyong.com/java/java-properties-file-examples/
-    */
-    private int setDbProperties(String configFilePath){
-
-        try{
-
-            InputStream input;
-            input = new FileInputStream(configFilePath);
-            this.properties.load(input);
-            return DatanodeConstants.SUCCESS;
-
-        }catch(FileNotFoundException ex){
-            System.err.println("FileNotFoundException thrown due to "+ ex.getMessage());
-            return DatanodeConstants.FAILURE;
-
-        }catch(IOException ex){
-            System.err.println("IOException thrown due to "+ ex.getMessage());
-            return DatanodeConstants.FAILURE;
-        }
-    }
 
     @Override
-    public int establishConnection(String configFilePath) throws SQLException {
+    public int establishConnection() throws SQLException {
 
-     //   if(this.setDbProperties(configFilePath)== DatanodeConstants.SUCCESS){
+            String url = "jdbc:mysql://" + this.properties.getProperty("databasehost")
+                            + ":" + this.properties.getProperty("databaseport") + "/" + this.properties.getProperty("databaseschema");
 
-//            String url = "jdbc:mysql://" + this.properties.getProperty("databasehost")
-//                            + ":" + this.properties.getProperty("databaseport") + "/" + this.properties.getProperty("databaseschema");
-//
-//            this.conn = DriverManager.getConnection(url, this.properties.getProperty("databaseuser"), this.properties.getProperty("databasepswd"));
+            logger.info("Attempting to connect to the database server at "+ url);
 
-            String url = "jdbc:mysql://localhost:3306/cdata";
-
-            this.conn = DriverManager.getConnection(url, "root", "admin123");
+            this.conn = DriverManager.getConnection(url, this.properties.getProperty("databaseuser"), this.properties.getProperty("databasepswd"));
 
             if(this.conn!=null) {
-                System.out.println("Database connection successfully established..");
+                logger.info("Database connection successfully established..");
                 return DatanodeConstants.SUCCESS;
             }
             else {
-                System.err.println("Failed to establish database connection..");
+                logger.error("Connection not yet established..");
                 return DatanodeConstants.FAILURE;
             }
-      //  }
-     //   else
-      //      return DatanodeConstants.FAILURE;
     }
 
     @Override
     public Object executeQuery(String query, char flag) throws SQLException {
 
         if(this.conn==null){
-            System.err.println("Database connection not yet established.. establish the connection first");
+            logger.error("Database connection not yet established.. establish the connection first");
             return null;
         }
         else{
             this.stmt = this.conn.createStatement();
 
+            logger.info("Attempting to execute the query '"+ query + "'");
             if(flag == DatanodeConstants.SELECT_FLAG){
                 ResultSet result = stmt.executeQuery(query);
                 return result;
@@ -93,7 +63,7 @@ abstract public class BaseDatabaseConnector implements DatabaseConnector{
                 return new Integer(count);
             }
             else{
-                System.err.println("Invalid query type");
+                logger.error("Invalid query type flag received.. check the query flag");
                 return null;
             }
         }
@@ -107,11 +77,7 @@ abstract public class BaseDatabaseConnector implements DatabaseConnector{
         if(this.conn!=null)
             this.conn.close();
 
-        System.out.println("Database connection successfully closed!!");
+        logger.info("Database connection successfully closed!!");
     }
-
-    abstract void setUp();
-
-    abstract void tearDown();
 
 }

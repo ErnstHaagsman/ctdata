@@ -12,16 +12,20 @@ public class Observations {
     private Double observationData;
     private String observationTime;
     private char acknowledgementFlag;
+    private Double latitude;
+    private Double longitude;
 
     public Observations() {
     }
 
-    public Observations(UUID raspberryNode, int sensorId, Double observationData, String observationTime, char acknowledgementFlag) {
+    public Observations(UUID raspberryNode, int sensorId, Double observationData, String observationTime, char acknowledgementFlag, Double latitude, Double longitude) {
         this.raspberryNode = raspberryNode;
         this.sensorId = sensorId;
         this.observationData = observationData;
         this.observationTime = observationTime;
         this.acknowledgementFlag = acknowledgementFlag;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public UUID getRaspberryNode() {
@@ -62,5 +66,21 @@ public class Observations {
 
     public void setAcknowledgementFlag(char acknowledgementFlag) {
         this.acknowledgementFlag = acknowledgementFlag;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

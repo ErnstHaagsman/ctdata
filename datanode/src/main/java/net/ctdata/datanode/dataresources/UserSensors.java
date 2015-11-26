@@ -7,6 +7,7 @@ public class UserSensors {
 
     private String userId;
     private String raspberryUrl;
+    private char connectionFlag;
 
     public UserSensors() {
     }
@@ -14,6 +15,7 @@ public class UserSensors {
     public UserSensors(String userId, String raspberryUrl) {
         this.userId = userId;
         this.raspberryUrl = raspberryUrl;
+        this.connectionFlag = 'N';
     }
 
     public String getUserId() {
@@ -30,5 +32,13 @@ public class UserSensors {
 
     public void setRaspberryUrl(String raspberryUrl) {
         this.raspberryUrl = raspberryUrl;
+    }
+
+    public char getConnectionFlag() {
+        return connectionFlag;
+    }
+
+    public void setConnectionFlag(char connectionFlag) {
+        this.connectionFlag = connectionFlag;
     }
 }
