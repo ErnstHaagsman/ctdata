@@ -1,8 +1,0 @@
-version: 0.0
-os: linux
-files:
-  - source:.\src
-    destination: \home\ubuntu\datanode\src
-  - source: build.gradle
-    destination: \home\ubuntu\datanode
-
