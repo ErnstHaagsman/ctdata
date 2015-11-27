@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: datanode\src
-    destination: \home\ubuntu\datanode\src
+  - source: datanode/src
+    destination: /home/ubuntu/datanode/src
 
 
