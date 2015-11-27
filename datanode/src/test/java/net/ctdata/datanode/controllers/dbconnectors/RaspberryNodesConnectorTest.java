@@ -1,5 +1,6 @@
 package net.ctdata.datanode.controllers.dbconnectors;
 
+import net.ctdata.datanode.DatanodeManager;
 import net.ctdata.datanode.dataresources.RaspberryNodes;
 import net.ctdata.datanode.dbconnectors.BaseDatabaseConnector;
 import net.ctdata.datanode.dbconnectors.DatabaseConnector;
@@ -40,7 +41,7 @@ public class RaspberryNodesConnectorTest {
     public void setUp(){
         try {
             // fetching the database connection properties
-            InputStream input = this.getClass().getResourceAsStream("dbconfig.properties");
+            InputStream input = DatanodeManager.class.getResourceAsStream("dbconfig.properties");
             Properties properties = new Properties();
             properties.load(input);
             // Initialising the database connection
@@ -73,18 +74,18 @@ public class RaspberryNodesConnectorTest {
         RaspberryNodes node = new RaspberryNodes(this.raspberryNodeIdOne, this.raspberryNodeOneUrl, this.gatewayIdOne);
 
         int i = raspConn.insertInto(node);
+        raspConn.deleteFrom(node);
         assertTrue(i==1);
+
     }
 
     @Test
-    public void uodateTest() throws SQLException{
+    public void updateTest() throws SQLException{
         RaspberryNodes node = new RaspberryNodes(this.raspberryNodeIdTwo, this.raspberryNodeOneUrl, this.gatewayIdOne);
         int i = raspConn.insertInto(node);
-
-        node.setRaspberryUrl(this.raspberryNodeTwoUrl);
-        node.setGatewayId(this.gatewayIdTwo);
+        node.setRaspberryNode(this.raspberryNodeIdOne);
         i = this.raspConn.updateFrom(node);
-
+        raspConn.deleteFrom(node);
         assertTrue(i==1);
     }
 
@@ -100,12 +101,14 @@ public class RaspberryNodesConnectorTest {
     public void selectAll() throws SQLException{
         List<RaspberryNodes> list = new ArrayList<RaspberryNodes>();
 
-        RaspberryNodes node = new RaspberryNodes(this.raspberryNodeIdFour, this.raspberryNodeFourUrl, this.gatewayIdTwo);
-        int i = raspConn.insertInto(node);
-        node = new RaspberryNodes(this.raspberryNodeIdFive, this.raspberryNodeFiveUrl, this.gatewayIdOne);
-        i = raspConn.insertInto(node);
+        RaspberryNodes node1 = new RaspberryNodes(this.raspberryNodeIdFour, this.raspberryNodeFourUrl, this.gatewayIdTwo);
+        int i = raspConn.insertInto(node1);
+        RaspberryNodes node2 = new RaspberryNodes(this.raspberryNodeIdFive, this.raspberryNodeFiveUrl, this.gatewayIdOne);
+        i = raspConn.insertInto(node2);
 
         list = this.raspConn.selectAll();
+        raspConn.deleteFrom(node1);
+        raspConn.deleteFrom(node2);
         assertTrue(list.size()>0);
     }
 
