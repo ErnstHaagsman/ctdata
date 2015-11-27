@@ -1,0 +1,67 @@
+package net.ctdata.datanode;
+
+import net.ctdata.common.Messages.AddNode;
+import net.ctdata.common.Messages.Observation;
+import net.ctdata.common.Queue.Listeners.AddNodeListener;
+import net.ctdata.common.Queue.Listeners.ObservationListener;
+import net.ctdata.common.Queue.RabbitMqConnection;
+import net.ctdata.datanode.dataresources.Observations;
+import net.ctdata.datanode.dataresources.UserSensors;
+import net.ctdata.datanode.dbconnectors.ObservationsConnector;
+import net.ctdata.datanode.dbconnectors.UserSensorsConnector;
+import net.ctdata.datanode.utility.DatanodeConstants;
+import net.ctdata.datanode.utility.DateTimeConversions;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * Created by aditi on 14/11/15.
+ * See for Log4j Initialisation: http://howtodoinjava.com/2013/04/08/how-to-configure-log4j-using-properties-file/,
+ * http://www.petrikainulainen.net/programming/gradle/getting-started-with-gradle-dependency-management/
+ */
+public class DatanodeManager {
+
+        public static void main(String[] args) throws IOException, TimeoutException, NoSuchAlgorithmException, KeyManagementException, URISyntaxException
+        {
+
+            final RabbitMqConnection conn = new RabbitMqConnection("amqp://localhost");
+            conn.RegisterListener(new AddNodeListener() {
+                @Override
+                public void HandleMessage(AddNode message) {
+                    // insert AddNode data into User_Sensors table
+                    System.out.println("Received AddNode messgae..");
+                    UserSensorsConnector userSensorsConnector = new UserSensorsConnector();
+                    UserSensors userSensors = new UserSensors("admin", message.getNodeURL());
+                    int i = userSensorsConnector.insertInto(userSensors);
+
+                    if(i!= DatanodeConstants.FAILURE)
+                        System.out.println("Successfully added sensor node with url "+ message.getNodeURL() +" for user admin");
+                }
+            });
+
+            conn.RegisterListener(new ObservationListener() {
+                @Override
+                public void HandleMessage(Observation message) {
+                    //insert Observation into the Observations table
+                    System.out.println("Received Observation data message..");
+                    ObservationsConnector obsConn = new ObservationsConnector();
+                    Observations obsData = new Observations();
+                    obsData.setRaspberryNode(message.getRaspberryNode());
+                    obsData.setSensorId(message.getSensor());
+                    obsData.setObservationData(message.getObservation());
+                    obsData.setObservationTime(DateTimeConversions.convertDateTimeToString(message.getTime()));
+                    int flag = obsConn.insertInto(obsData);
+
+                    if(flag != DatanodeConstants.FAILURE)
+                        System.out.println("Successfully added observavation for " +
+                                "raspberry node " + obsData.getRaspberryNode() + " , sensor id "+ obsData.getSensorId());
+                }
+            });
+
+        }
+
+}

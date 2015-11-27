@@ -1,13 +1,16 @@
 package net.ctdata.common.Messages.Abstract;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import net.ctdata.common.Json.MapperSingleton;
 import net.ctdata.common.Queue.Message;
 import net.ctdata.common.Queue.QueueListener;
 
 import java.util.TimeZone;
 
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "messageType")
 public abstract class AbstractMessage implements Message {
 
     /**
@@ -32,9 +35,7 @@ public abstract class AbstractMessage implements Message {
     @Override
     @JsonIgnore
     public String getBody() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setTimeZone(TimeZone.getTimeZone("UTC"));
-        mapper.registerModule(new JodaModule());
+        ObjectMapper mapper = new MapperSingleton().getMapper();
         try {
             return mapper.writeValueAsString(this);
         } catch (Exception e) {}

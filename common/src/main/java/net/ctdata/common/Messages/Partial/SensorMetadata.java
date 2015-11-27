@@ -7,7 +7,6 @@ public class SensorMetadata {
     public int sensor;
     public String name;
     public int pollingInterval;
-    public DateTime lastObservation;
     public String type;
     public double latitude;
     public double longitude;
@@ -55,21 +54,6 @@ public class SensorMetadata {
      */
     public void setPollingInterval(int pollingInterval) {
         this.pollingInterval = pollingInterval;
-    }
-
-    /**
-     * The UTC time of the last observation from this sensor that is currently stored in the database
-     * @return {org.joda.time.DateTime}
-     */
-    public DateTime getLastObservation() {
-        return lastObservation;
-    }
-
-    /**
-     * @see {@link SensorMetadata#getLastObservation()}
-     */
-    public void setLastObservation(DateTime lastObservation) {
-        this.lastObservation = lastObservation.toDateTime(DateTimeZone.UTC);
     }
 
     /**
@@ -129,8 +113,6 @@ public class SensorMetadata {
         if (Double.compare(that.latitude, latitude) != 0) return false;
         if (Double.compare(that.longitude, longitude) != 0) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (lastObservation != null ? !lastObservation.equals(that.lastObservation) : that.lastObservation != null)
-            return false;
         return !(type != null ? !type.equals(that.type) : that.type != null);
 
     }
@@ -142,7 +124,6 @@ public class SensorMetadata {
         result = sensor;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + pollingInterval;
-        result = 31 * result + (lastObservation != null ? lastObservation.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         temp = Double.doubleToLongBits(latitude);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
