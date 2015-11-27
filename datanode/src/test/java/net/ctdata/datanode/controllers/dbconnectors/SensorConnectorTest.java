@@ -1,5 +1,6 @@
 package net.ctdata.datanode.controllers.dbconnectors;
 
+import net.ctdata.datanode.DatanodeManager;
 import net.ctdata.datanode.dataresources.Sensors;
 import net.ctdata.datanode.dbconnectors.BaseDatabaseConnector;
 import net.ctdata.datanode.dbconnectors.DatabaseConnector;
@@ -31,7 +32,7 @@ public class SensorConnectorTest {
     public void setUp(){
         try {
             // fetching the database connection properties
-            InputStream input = this.getClass().getResourceAsStream("dbconfig.properties");
+            InputStream input = DatanodeManager.class.getResourceAsStream("dbconfig.properties");
             Properties properties = new Properties();
             properties.load(input);
             // Initialising the database connection
@@ -56,6 +57,7 @@ public class SensorConnectorTest {
                 37.3394 , -121.8938);
 
         int i = this.sensorsConn.insertInto(sensor);
+        sensorsConn.deleteFrom(sensor);
         assertTrue(i==1);
     }
 
@@ -70,6 +72,7 @@ public class SensorConnectorTest {
         sensor.setPollingFrequency(500);
 
         i = this.sensorsConn.updateFrom(sensor);
+        sensorsConn.deleteFrom(sensor);
         assertTrue(i==1);
 
     }
@@ -87,19 +90,20 @@ public class SensorConnectorTest {
 
     @Test
     public void selectAll() throws SQLException{
-        Sensors sensor = new Sensors(this.raspberryNodeIdOne, 3, "Gamma", "Temperature", 1500,
+        Sensors sensor1 = new Sensors(this.raspberryNodeIdOne, 3, "Gamma", "Temperature", 1500,
                  37.3394 , -121.8938);
 
-        int i = this.sensorsConn.insertInto(sensor);
+        int i = this.sensorsConn.insertInto(sensor1);
 
-        sensor = new Sensors(this.raspberryNodeIdTwo, 2, "Yeta", "Temperature", 1800,
+        Sensors sensor2 = new Sensors(this.raspberryNodeIdTwo, 2, "Yeta", "Temperature", 1800,
                  37.3394 , -121.8938);
 
-        i = this.sensorsConn.insertInto(sensor);
+        i = this.sensorsConn.insertInto(sensor2);
 
         List<Sensors> list = new ArrayList<Sensors>();
         list = this.sensorsConn.selectAll();
-
+        sensorsConn.deleteFrom(sensor1);
+        sensorsConn.deleteFrom(sensor2);
         assertTrue(list.size()>0);
     }
 
