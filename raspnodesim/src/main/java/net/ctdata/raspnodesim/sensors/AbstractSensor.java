@@ -1,6 +1,7 @@
 package net.ctdata.raspnodesim.sensors;
 
 import net.ctdata.common.Messages.Observation;
+import net.ctdata.common.Messages.Partial.SensorMetadata;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 
@@ -13,6 +14,8 @@ public abstract class AbstractSensor implements Sensor {
     int number;
     double latitude;
     double longitude;
+    String type;
+    String name;
 
     public AbstractSensor(){
     }
@@ -20,6 +23,16 @@ public abstract class AbstractSensor implements Sensor {
     public AbstractSensor(int pollingInterval, int number){
         this.pollingInterval = pollingInterval;
         this.number = number;
+    }
+
+    public SensorMetadata getMetadata(){
+        SensorMetadata sensorMetadata = new SensorMetadata();
+        sensorMetadata.setType(getType());
+        sensorMetadata.setPollingInterval(getPollingInterval());
+        sensorMetadata.setLongitude(getLongitude());
+        sensorMetadata.setLatitude(getLatitude());
+        sensorMetadata.setName(getName());
+        return sensorMetadata;
     }
 
     @Override
@@ -70,6 +83,26 @@ public abstract class AbstractSensor implements Sensor {
     @Override
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

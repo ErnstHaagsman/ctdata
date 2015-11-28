@@ -34,6 +34,14 @@ public class Metadata extends RaspberryMessage {
         return sensors;
     }
 
+    /**
+     * The metadata of all sensors connected to this Raspberry Pi node
+     * @param  {List<SensorMetadata>}
+     */
+    public void setSensors(List<SensorMetadata> sensors) {
+        this.sensors = sensors;
+    }
+
     @Override
     @JsonIgnore
     public String getRoutingKey() {

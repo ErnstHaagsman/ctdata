@@ -1,6 +1,7 @@
 package net.ctdata.sensorgateway.websocket;
 
 import net.ctdata.common.Messages.Abstract.AbstractMessage;
+import net.ctdata.common.Messages.Metadata;
 import net.ctdata.common.Messages.Observation;
 import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.raspnodeprotocol.WebsocketMessage;
@@ -27,7 +28,13 @@ public class RaspNodeClient extends WebSocketClient {
     public void onMessage(String message) {
         try {
             AbstractMessage incoming = WebsocketMessage.fromJson(message).getPayload();
-            if (incoming.getClass() == Observation.class){
+            Class incomingClass = incoming.getClass();
+            if (incomingClass == Metadata.class){
+                Metadata metadata = (Metadata)incoming;
+                System.out.println(String.format("Received metadata for node %s", metadata.getRaspberryNode()));
+                metadata.setNodeURL(this.getURI().toString());
+                conn.SendMessage(metadata);
+            } else if (incomingClass == Observation.class){
                 Observation observation = (Observation)incoming;
                 System.out.println(String.format("Forwarded observation [Node: %s, Sensor: %d, Data: %f]", observation.getRaspberryNode(), observation.getSensor(), observation.getObservation()));
                 conn.SendMessage(observation);

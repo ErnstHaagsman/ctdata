@@ -1,6 +1,7 @@
 package net.ctdata.datanode.utility;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -18,5 +19,9 @@ public class DateTimeConversions {
 
     public static String convertDateTimeToString(DateTime dt){
         return dt.toString("yyyy-MM-dd HH:mm:ss");
+    }
+
+    public static DateTime convertStringToDateTime(String str){
+        return DateTime.parse(str, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }

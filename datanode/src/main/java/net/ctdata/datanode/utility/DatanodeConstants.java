@@ -10,8 +10,6 @@ public class DatanodeConstants {
 
     public static final int FAILURE = -1;
 
-    public static final String DBCONFIGPATH = "./././dbconfig.properties";
-
     public static char SELECT_FLAG = 'S';
 
     public static char INSERT_FLAG = 'I';
@@ -23,4 +21,5 @@ public class DatanodeConstants {
     public static char ACK = 'Y';
 
     public static char NACK = 'N';
+
 }
