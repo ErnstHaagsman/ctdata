@@ -7,7 +7,7 @@ import java.util.UUID;
 public abstract class HistoryResponseListener extends AbstractQueueListener<HistoryResponse> {
     private UUID requestId;
 
-    public HistoryResponseListener(UUID requestId){
+    public HistoryResponseListener(){
         super(HistoryResponse.class);
         this.requestId = requestId;
     }
