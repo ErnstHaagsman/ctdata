@@ -1,5 +1,6 @@
 package net.ctdata.webapp.controllers;
 
+import net.ctdata.webapp.queuelistener.MyAddedNodeRequestListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,11 +25,17 @@ public class IndexController {
         return "hello";
     }
 
-
+    MyAddedNodeRequestListener addedNode;
     @RequestMapping(value="/greeting", method=RequestMethod.GET)
     public String greetingForm(Model model) {
         model.addAttribute("greeting", new Greeting());
         return "greeting";
+    }
+
+    @RequestMapping(value="/admin", method=RequestMethod.GET)
+    public String adminForm(Model model) {
+        model.addAttribute("addedNodes", addedNode.getAddedNodes());
+        return "admin";
     }
 
     @RequestMapping(value="/greeting", method=RequestMethod.POST)
