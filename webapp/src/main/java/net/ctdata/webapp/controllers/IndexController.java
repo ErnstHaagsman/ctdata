@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.LinkedList;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
@@ -61,7 +60,7 @@ public class IndexController {
         RabbitMqConnection queueConn = new RabbitMqConnection("amqp://localhost");
         queueConn.SendMessage(rn);
         MyAddedNodeRequestListener an= new MyAddedNodeRequestListener(UUID.randomUUID(),queueConn);
-        an.setAddNode();
+        //an.setAddNode();
 
         model.addAttribute("addedNodes", an.getAddedNodes());
         return "admin";
@@ -77,7 +76,7 @@ public class IndexController {
         RabbitMqConnection queueConn = new RabbitMqConnection("amqp://localhost");
         queueConn.SendMessage(rn);
         MyObservationListener an= new MyObservationListener(UUID.randomUUID(),queueConn);
-        an.setObservations();
+        //an.setObservations();
         //model.addAttribute("observationsArrayList", an.getObservationsJSON());
         model.addAttribute("observationsJSON", an.getObservationsJSON());
         return "testMap";
@@ -93,7 +92,7 @@ public class IndexController {
         RabbitMqConnection queueConn = new RabbitMqConnection("amqp://localhost");
         queueConn.SendMessage(rn);
         MyObservationListener an= new MyObservationListener(UUID.randomUUID(),queueConn);
-        an.setObservations();
+        //an.setObservations();
         //model.addAttribute("observationsArrayList", an.getObservationsJSON());
         model.addAttribute("observationsJSON", an.getObservationsJSON());
         return "history";
