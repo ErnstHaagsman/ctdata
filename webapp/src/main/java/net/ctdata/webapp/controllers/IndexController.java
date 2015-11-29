@@ -4,6 +4,7 @@ import net.ctdata.common.Messages.AddNode;
 import net.ctdata.common.Messages.RequestAddedNodes;
 import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.webapp.queuelistener.MyAddedNodeRequestListener;
+import net.ctdata.webapp.queuelistener.MyObservationListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -63,6 +64,22 @@ public class IndexController {
         return "admin";
     }
 
+    @RequestMapping(value="/testMap", method=RequestMethod.GET)
+    public String Map(Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
+
+        RequestAddedNodes rn = new RequestAddedNodes();
+        rn.setRequestId(UUID.randomUUID());
+        rn.setUserId("");
+        rn.setInterfaceType("Public");
+        RabbitMqConnection queueConn = new RabbitMqConnection("amqp://localhost");
+        queueConn.SendMessage(rn);
+        MyObservationListener an= new MyObservationListener(UUID.randomUUID(),queueConn);
+        an.setObservations();
+        //model.addAttribute("observationsArrayList", an.getObservationsJSON());
+        model.addAttribute("observationsJSON", an.getObservationsJSON());
+        return "testMap";
+    }
+
     @RequestMapping(value="/greeting", method=RequestMethod.POST)
     public String greetingSubmit(@ModelAttribute Greeting greeting, Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
         model.addAttribute("greeting", greeting);
@@ -75,4 +92,5 @@ public class IndexController {
         queueConn.SendMessage(an);
         return "result";
     }
+
 }
