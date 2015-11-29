@@ -1,11 +1,20 @@
 dependencies {
 	compile 'org.java-websocket:Java-WebSocket:1.3.0'
+	compile 'commons-cli:commons-cli:1.3'
+	compile 'log4j:log4j:1.2.17'
 	compile project (':raspnodeprotocol')
 	compile project (':common')
 }
 
 jar {
+	baseName = 'CtdataSensorGateway'
+	version = '1.0.0'
 	manifest {
 		attributes 'Main-Class': 'net.ctdata.sensorgateway.SensorGateway'
 	}
+
+	from {
+		configurations.compile.collect { it.isDirectory() ? it : zipTree(it)}
+	}
+
 }

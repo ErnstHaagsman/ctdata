@@ -1,56 +1,37 @@
 package net.ctdata.sensorgateway.websocket;
 
-import net.ctdata.common.Messages.Abstract.AbstractMessage;
-import net.ctdata.common.Messages.Metadata;
-import net.ctdata.common.Messages.Observation;
 import net.ctdata.common.Queue.RabbitMqConnection;
-import net.ctdata.raspnodeprotocol.WebsocketMessage;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
 
-import java.io.IOException;
 import java.net.URI;
 
-public class RaspNodeClient extends WebSocketClient {
-    RabbitMqConnection conn;
+public class RaspNodeClient extends Thread {
+    private RaspNodeWebsocketClient client;
+    final URI nodeURL;
+    final RabbitMqConnection conn;
 
     public RaspNodeClient(URI nodeURL, RabbitMqConnection conn){
-        super(nodeURL);
+        this.nodeURL = nodeURL;
         this.conn = conn;
+        this.start();
     }
 
     @Override
-    public void onOpen(ServerHandshake handshakedata) {
-
+    public void run() {
+        startNewClient();
     }
 
-    @Override
-    public void onMessage(String message) {
+    private void startNewClient(){
+        client = new RaspNodeWebsocketClient(nodeURL, conn, this);
+        client.connect();
+    }
+
+    void onClose(){
         try {
-            AbstractMessage incoming = WebsocketMessage.fromJson(message).getPayload();
-            Class incomingClass = incoming.getClass();
-            if (incomingClass == Metadata.class){
-                Metadata metadata = (Metadata)incoming;
-                System.out.println(String.format("Received metadata for node %s", metadata.getRaspberryNode()));
-                metadata.setNodeURL(this.getURI().toString());
-                conn.SendMessage(metadata);
-            } else if (incomingClass == Observation.class){
-                Observation observation = (Observation)incoming;
-                System.out.println(String.format("Forwarded observation [Node: %s, Sensor: %d, Data: %f]", observation.getRaspberryNode(), observation.getSensor(), observation.getObservation()));
-                conn.SendMessage(observation);
-            }
-        } catch (IOException e) {
+            Thread.sleep(2000);
+            startNewClient();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onClose(int code, String reason, boolean remote) {
-
-    }
-
-    @Override
-    public void onError(Exception ex) {
-
-    }
 }
