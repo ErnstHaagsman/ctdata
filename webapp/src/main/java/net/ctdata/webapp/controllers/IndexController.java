@@ -61,7 +61,7 @@ public class IndexController {
         queueConn.SendMessage(rn);
         MyAddedNodeRequestListener an= new MyAddedNodeRequestListener(UUID.randomUUID(),queueConn);
         an.setAddNode();
-        LinkedList<AddedNode> output = an.getAddedNodes();
+
         model.addAttribute("addedNodes", an.getAddedNodes());
         return "admin";
     }
