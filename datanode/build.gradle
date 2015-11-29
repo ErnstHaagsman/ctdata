@@ -17,15 +17,15 @@ dependencies {
 	testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-def mainProjects = [':common',':datanode']
-task oneJar( type: Jar , dependsOn: mainProjects.collect{ it+":compileJava"}) {
+
+jar {
 	baseName = 'CtdataDatanodeServer'
 	version = '1.0.0'
-	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-	from files(mainProjects.collect{project(it).file('build/classes/main')})
-	from files(mainProjects.collect{project(it).file('src/main/resources')})
 	manifest {
 		attributes 'Main-Class': 'net.ctdata.datanode.DatanodeManager'
 	}
-}
 
+	from {
+		configurations.compile.collect { it.isDirectory() ? it : zipTree(it)}
+	}
+}
