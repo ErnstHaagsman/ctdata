@@ -134,6 +134,24 @@ public class ObservationsConnector{
         return list;
     }
 
+    public Double selectLastObservation(UUID raspberryNode, int sensorId) throws SQLException{
+
+        this.query = "SELECT NodeObservations.Observation_Data AS LastObsData FROM \n" +
+                "(SELECT Raspberry_Node, Sensor_Id, Observation_Time, Observation_Data FROM Observations \n" +
+                "GROUP BY Raspberry_Node, Sensor_Id HAVING Raspberry_Node = '"+ raspberryNode  + "' AND Sensor_Id = "+ sensorId + ") \n" +
+                "AS NodeObservations\n" +
+                "WHERE NodeObservations.Observation_Time = (SELECT max(NodeObs.Observation_Time)\n" +
+                "FROM (SELECT Raspberry_Node, Sensor_Id, Observation_Time, Observation_Data FROM Observations \n" +
+                "GROUP BY Raspberry_Node, Sensor_Id HAVING Raspberry_Node = '" + raspberryNode + "' AND Sensor_Id = "+ sensorId +") \n" +
+                "AS NodeObs)";
+        ResultSet result = (ResultSet) dbConnector.executeQuery(this.query, DatanodeConstants.SELECT_FLAG);
+        if(result!=null){
+            return result.getDouble("LastObsData");
+        }
+        else
+            return null;
+    }
+
     public int count() throws SQLException{
 
         this.query = "SELECT COUNT(*) AS Total FROM Observations";

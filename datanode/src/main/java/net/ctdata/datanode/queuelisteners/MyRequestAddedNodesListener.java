@@ -1,18 +1,15 @@
 package net.ctdata.datanode.queuelisteners;
 
 import net.ctdata.common.Messages.AddedNodesMetadata;
-import net.ctdata.common.Messages.Metadata;
-import net.ctdata.common.Messages.Partial.SensorMetadata;
+import net.ctdata.common.Messages.Partial.SensorLastObservation;
+import net.ctdata.common.Messages.RaspberryLastObservation;
 import net.ctdata.common.Messages.RequestAddedNodes;
 import net.ctdata.common.Queue.Listeners.RequestAddedNodesListener;
 import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.datanode.dataresources.RaspberryNodes;
 import net.ctdata.datanode.dataresources.Sensors;
 import net.ctdata.datanode.dataresources.UserSensors;
-import net.ctdata.datanode.dbconnectors.DatabaseConnector;
-import net.ctdata.datanode.dbconnectors.RaspberryNodesConnector;
-import net.ctdata.datanode.dbconnectors.SensorsConnector;
-import net.ctdata.datanode.dbconnectors.UserSensorsConnector;
+import net.ctdata.datanode.dbconnectors.*;
 import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
@@ -50,14 +47,28 @@ public class MyRequestAddedNodesListener extends RequestAddedNodesListener {
                 list = userSensorConn.selectFrom(message.getUserId());
             else if(message.getInterfaceType().equalsIgnoreCase("Public"))
                 list = userSensorConn.selectAll();
-            if(list.size()>=1){
-                response = getResponse(list);
-                response.setRequestId(message.getRequestId());
-                logger.debug("REQUEST_ADDED_NODES: Sending the response message for request Id "+ response.getRequestId());
-                conn.SendMessage(response);
+            if(list!=null) {
+                if (list.size() >= 1) {
+                    response = getResponse(list);
+                    if(response == null) {
+                        response = new AddedNodesMetadata();
+                        response.setRaspberryNodes(null);
+                    }
+                    response.setRequestId(message.getRequestId());
+                    logger.debug("REQUEST_ADDED_NODES: Sending the response message for request Id " + response.getRequestId());
+                    conn.SendMessage(response);
+                } else {
+                    logger.debug("REQUEST_ADDED_NODES: No connected sensors for the interface type " + message.getInterfaceType() + " .. sending empty response");
+                    response.setRequestId(message.getRequestId());
+                    response.setRaspberryNodes(null);
+                    conn.SendMessage(response);
+                }
             }
-            else{
-                logger.debug("REQUEST_ADDED_NODES: No connected sensors for the interface type " + message.getInterfaceType());
+            else {
+                logger.debug("REQUEST_ADDED_NODES: No connected sensors for the interface type " + message.getInterfaceType() + " .. sending empty response");
+                response.setRequestId(message.getRequestId());
+                response.setRaspberryNodes(null);
+                conn.SendMessage(response);
             }
         }catch (SQLException ex){
             logger.error("SQLException: Exception thrown while fetching data from the database due to "+ ex.getMessage());
@@ -71,7 +82,9 @@ public class MyRequestAddedNodesListener extends RequestAddedNodesListener {
                 AddedNodesMetadata response = new AddedNodesMetadata();
                 RaspberryNodesConnector raspConn = new RaspberryNodesConnector(this.dbConnector);
                 SensorsConnector senConn = new SensorsConnector(this.dbConnector);
-                List<Metadata> metaAddedNodes = new ArrayList<Metadata>();
+                ObservationsConnector obsConn = new ObservationsConnector(this.dbConnector);
+
+                List<RaspberryLastObservation> addedNodes = new ArrayList<RaspberryLastObservation>();
 
                 for(UserSensors eachNode: list) {
                     RaspberryNodes node = new RaspberryNodes();
@@ -80,25 +93,26 @@ public class MyRequestAddedNodesListener extends RequestAddedNodesListener {
                     List<Sensors> sensors = new ArrayList<Sensors>();
                     sensors = senConn.selectFrom(nodeInfo.getRaspberryNode());
 
-                    Metadata metanode = new Metadata();
-                    List<SensorMetadata> metaSensorLists = new ArrayList<SensorMetadata>();
+                    RaspberryLastObservation metanode = new RaspberryLastObservation();
+                    List<SensorLastObservation> metaSensorLists = new ArrayList<SensorLastObservation>();
                     metanode.setRaspberryNode(nodeInfo.getRaspberryNode());
                     metanode.setNodeURL(nodeInfo.getRaspberryUrl());
                     for(Sensors eachSensor: sensors) {
-                        SensorMetadata metaSensor = new SensorMetadata();
+                        SensorLastObservation metaSensor = new SensorLastObservation();
                         metaSensor.setSensor(eachSensor.getSensorId());
                         metaSensor.setName(eachSensor.getSensorName());
                         metaSensor.setType(eachSensor.getType());
                         metaSensor.setPollingInterval(eachSensor.getPollingFrequency());
                         metaSensor.setLatitude(eachSensor.getLatitude());
                         metaSensor.setLongitude(eachSensor.getLongitude());
+                        metaSensor.setLastObservation(obsConn.selectLastObservation(nodeInfo.getRaspberryNode(), eachSensor.getSensorId()));
                         metaSensorLists.add(metaSensor);
                     }
                     metanode.setSensors(metaSensorLists);
-                    metaAddedNodes.add(metanode);
+                    addedNodes.add(metanode);
                 }
 
-                response.setRaspberryNodes(metaAddedNodes);
+                response.setRaspberryNodes(addedNodes);
                 return response;
             }catch(SQLException ex){
                 logger.error("SQLException: Exception thrown while fetching data from the database due to "+ ex.getMessage());

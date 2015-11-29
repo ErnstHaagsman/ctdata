@@ -1,5 +1,6 @@
 package net.ctdata.datanode.controllers.dbconnectors;
 
+import net.ctdata.datanode.DatanodeManager;
 import net.ctdata.datanode.dataresources.UserSensors;
 import net.ctdata.datanode.dbconnectors.BaseDatabaseConnector;
 import net.ctdata.datanode.dbconnectors.DatabaseConnector;
@@ -33,7 +34,7 @@ public class UserSensorsConnectorTest {
     public void setUp(){
         try {
             // fetching the database connection properties
-            InputStream input = this.getClass().getResourceAsStream("dbconfig.properties");
+            InputStream input = DatanodeManager.class.getResourceAsStream("dbconfig.properties");
             Properties properties = new Properties();
             properties.load(input);
             // Initialising the database connection
@@ -58,6 +59,7 @@ public class UserSensorsConnectorTest {
     public void insertTest() throws SQLException{
         UserSensors userSensors = new UserSensors("root", this.raspberryNodeUrlOne);
         int i = this.userSensorConn.insertInto(userSensors);
+        userSensorConn.deleteFrom(userSensors);
         assertTrue(i==1);
     }
 
@@ -65,7 +67,9 @@ public class UserSensorsConnectorTest {
     public void updateTest() throws SQLException{
         UserSensors userSensors = new UserSensors("root", this.raspberryNodeUrlTwo);
         int i = this.userSensorConn.insertInto(userSensors);
+        userSensors.setConnectionFlag('Y');
         i = this.userSensorConn.updateFrom(userSensors);
+        userSensorConn.deleteFrom(userSensors);
         assertTrue(i==1);
     }
 
@@ -81,12 +85,16 @@ public class UserSensorsConnectorTest {
     public void selectAllTest() throws SQLException{
         List<UserSensors> list = new ArrayList<UserSensors>();
 
-        UserSensors userSensors = new UserSensors("localadmin", this.raspberryNodeUrlOne);
-        int i = this.userSensorConn.insertInto(userSensors);
-        userSensors = new UserSensors("localroot", this.raspberryNodeUrlTwo);
-        i = this.userSensorConn.insertInto(userSensors);
+        UserSensors userSensors1 = new UserSensors("localadmin", this.raspberryNodeUrlOne);
+        userSensors1.setConnectionFlag('Y');
+        int i = this.userSensorConn.insertInto(userSensors1);
+        UserSensors userSensors2 = new UserSensors("localroot", this.raspberryNodeUrlTwo);
+        userSensors2.setConnectionFlag('Y');
+        i = this.userSensorConn.insertInto(userSensors2);
 
         list = this.userSensorConn.selectAll();
+        userSensorConn.deleteFrom(userSensors1);
+        userSensorConn.deleteFrom(userSensors2);
         assertTrue(list.size()>0);
     }
 
@@ -94,12 +102,16 @@ public class UserSensorsConnectorTest {
     public void selectTest() throws SQLException{
         List<UserSensors> list = new ArrayList<UserSensors>();
 
-        UserSensors userSensors = new UserSensors("chris", this.raspberryNodeUrlOne);
-        int i = this.userSensorConn.insertInto(userSensors);
-        userSensors = new UserSensors("chris", this.raspberryNodeUrlTwo);
-        i = this.userSensorConn.insertInto(userSensors);
+        UserSensors userSensors1 = new UserSensors("chris", this.raspberryNodeUrlOne);
+        userSensors1.setConnectionFlag('Y');
+        int i = this.userSensorConn.insertInto(userSensors1);
+        UserSensors userSensors2 = new UserSensors("chris", this.raspberryNodeUrlTwo);
+        userSensors2.setConnectionFlag('Y');
+        i = this.userSensorConn.insertInto(userSensors2);
 
         list = this.userSensorConn.selectFrom("chris");
+        userSensorConn.deleteFrom(userSensors1);
+        userSensorConn.deleteFrom(userSensors2);
         assertTrue(list.size()>0);
     }
 

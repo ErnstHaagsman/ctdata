@@ -1,5 +1,6 @@
 package net.ctdata.datanode.controllers.dbconnectors;
 
+import net.ctdata.datanode.DatanodeManager;
 import net.ctdata.datanode.dataresources.Users;
 import net.ctdata.datanode.dbconnectors.BaseDatabaseConnector;
 import net.ctdata.datanode.dbconnectors.DatabaseConnector;
@@ -27,7 +28,7 @@ public class UsersConnectorTest {
     public void setUp(){
         try {
             // fetching the database connection properties
-            InputStream input = this.getClass().getResourceAsStream("dbconfig.properties");
+            InputStream input = DatanodeManager.class.getResourceAsStream("dbconfig.properties");
             Properties properties = new Properties();
             properties.load(input);
             // Initialising the database connection
@@ -46,6 +47,7 @@ public class UsersConnectorTest {
     public void insertTest() throws SQLException{
         Users user = new Users("root", "admin");
         int i = this.userConn.insertInto(user);
+        userConn.deleteFrom(user);
         assertTrue(i==1);
     }
 
@@ -56,6 +58,7 @@ public class UsersConnectorTest {
 
         user.setPassword("password");
         i = this.userConn.updateFrom(user);
+        userConn.deleteFrom(user);
         assertTrue(i==1);
     }
 
@@ -71,12 +74,14 @@ public class UsersConnectorTest {
     public void selectTest() throws SQLException{
         List<Users> list = new ArrayList<Users>();
 
-        Users user = new Users("ross", "ross123");
-        int i = this.userConn.insertInto(user);
-        user = new Users("michael", "pswd123");
-        i = this.userConn.insertInto(user);
+        Users user1 = new Users("ross", "ross123");
+        int i = this.userConn.insertInto(user1);
+        Users user2 = new Users("michael", "pswd123");
+        i = this.userConn.insertInto(user2);
 
         list = this.userConn.selectAll();
+        userConn.deleteFrom(user1);
+        userConn.deleteFrom(user2);
         assertTrue(list.size()>0);
     }
 
