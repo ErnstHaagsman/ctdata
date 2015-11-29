@@ -1,6 +1,7 @@
 package net.ctdata.webapp;
 
 import net.ctdata.common.Queue.RabbitMqConnection;
+import net.ctdata.webapp.queuelistener.MyAddNodeResponseListener;
 import net.ctdata.webapp.queuelistener.MyAddedNodeRequestListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,6 +33,7 @@ public class WebApp {
             System.out.println(beanName);
         }
         conn.RegisterListener(new MyAddedNodeRequestListener(conn));
+        conn.RegisterListener(new MyAddNodeResponseListener(conn));
     }
 
 }

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Admin</title>
+
 </head>
 <body>
 <h1>Added Nodes</h1>
@@ -28,23 +29,23 @@
 
     </tr>
 
-    <tr th:each="AddedNode : ${addedNodes}">
+    <tr th:each="addedNode : ${addedNodes}">
 
-        <td th:text="${addedNodes.url}"></td>
+        <td th:text="${addedNode.url}"></td>
 
-        <td th:text="${addedNodes.nodeID}"></td>
+        <td th:text="${addedNode.nodeID}"></td>
 
-        <td th:text="${addedNodes.sId}"></td>
+        <td th:text="${addedNode.sId}"></td>
 
-        <td th:text="${addedNodes.sensorName}"></td>
+        <td th:text="${addedNode.sensorName}"></td>
 
-        <td th:text="${addedNodes.sensorType}"></td>
+        <td th:text="${addedNode.sensorType}"></td>
 
-        <td th:text="${addedNodes.pollingInterval}"></td>
+        <td th:text="${addedNode.pollingInterval}"></td>
 
-        <td th:text="${addedNodes.latitude}"></td>
+        <td th:text="${addedNode.latitude}"></td>
 
-        <td th:text="${addedNodes.longitude}"></td>
+        <td th:text="${addedNode.longitude}"></td>
 
     </tr>
 

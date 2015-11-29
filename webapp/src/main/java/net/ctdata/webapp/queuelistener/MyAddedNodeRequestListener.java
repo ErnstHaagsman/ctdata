@@ -17,6 +17,16 @@ import java.util.UUID;
 public class MyAddedNodeRequestListener extends AddedNodesMetadataListener {
 
     private RabbitMqConnection queueConn;
+    AddedNode addedNode = new AddedNode();
+    String url;
+    UUID nodeID;
+    double sId;
+    String sensorName;
+    String sensorType;
+    int pollingInterval;
+    double latitude;
+    double longitude;
+
     ArrayList<AddedNode> addedNodes = new ArrayList<AddedNode>();
     public MyAddedNodeRequestListener(RabbitMqConnection queueConn){
         super();
@@ -32,6 +42,21 @@ public class MyAddedNodeRequestListener extends AddedNodesMetadataListener {
         return addedNodes;
     }
 
+    public void setAddNode(){
+
+            addedNode.setUrl("ws://localhost:8765");
+
+            addedNode.setNodeID(UUID.randomUUID());
+
+                addedNode.setSId(666);
+                addedNode.setSensorName("Temperature");
+                addedNode.setSensorType("32");
+                addedNode.setPollingInterval(50);
+                addedNode.setLatitude(36.485);
+                addedNode.setLongitude(-121.845);
+                addedNodes.add(addedNode);
+    }
+
     @Override
     public void HandleMessage(AddedNodesMetadata message) {
         // Tasks to be done
@@ -40,19 +65,12 @@ public class MyAddedNodeRequestListener extends AddedNodesMetadataListener {
         // Task #3: Register observation listener for each sensor
 
         // Task #1: update raspberry_node in Raspberry_Nodes table
+        System.out.println("Added Node");
+        System.out.println(String.format("Received metadata for node %s", message.getRaspberryNodes()));
 
-
-        AddedNode addedNode = new AddedNode();
-        String url;
-        UUID nodeID;
-        double sId;
-        String sensorName;
-        String sensorType;
-        int pollingInterval;
-        double latitude;
-        double longitude;
         for (Metadata r: message.getRaspberryNodes()) {
             addedNode.setUrl(r.getNodeURL());
+
             addedNode.setNodeID(r.getRaspberryNode());
             for (SensorMetadata s : r.getSensors()) {
                 addedNode.setSId(s.getSensor());

@@ -7,7 +7,7 @@ package net.ctdata.webapp.controllers;
 public class Greeting {
 
     private long id;
-    private String content;
+    private String url;
 
     public long getId() {
         return id;
@@ -17,12 +17,12 @@ public class Greeting {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public String getUrl() {
+        return url;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
 }
