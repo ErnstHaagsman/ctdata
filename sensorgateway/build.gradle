@@ -7,7 +7,14 @@ dependencies {
 }
 
 jar {
+	baseName = 'CtdataSensorGateway'
+	version = '1.0.0'
 	manifest {
 		attributes 'Main-Class': 'net.ctdata.sensorgateway.SensorGateway'
 	}
+
+	from {
+		configurations.compile.collect { it.isDirectory() ? it : zipTree(it)}
+	}
+
 }

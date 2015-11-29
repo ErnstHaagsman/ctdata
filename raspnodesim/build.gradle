@@ -9,7 +9,12 @@ dependencies {
 }
 
 jar {
+	baseName = 'CtdataRaspNodeSim'
+	version = '1.0.0'
 	manifest {
 		attributes 'Main-Class': 'net.ctdata.raspnodesim.RaspNodeSim'
+	}
+	from {
+		configurations.compile.collect { it.isDirectory() ? it : zipTree(it)}
 	}
 }

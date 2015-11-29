@@ -14,7 +14,7 @@ import java.util.UUID;
 public class AddedNodesMetadata extends AbstractMessage {
 
     private UUID requestId;
-    private List<Metadata> raspberryNodes = new LinkedList<Metadata>();
+    private List<RaspberryLastObservation> raspberryNodes = new LinkedList<RaspberryLastObservation>();
 
     /**
      * Randomly generated unique request Id, this should match the request Id of the corresponding RequestAddedNodes message
@@ -24,19 +24,28 @@ public class AddedNodesMetadata extends AbstractMessage {
         return requestId;
     }
 
+
+    /**
+     * @see {@link AddedNodesMetadata#requestId}
+     */
     public void setRequestId(UUID requestId) {
         this.requestId = requestId;
     }
 
+
     /**
-     * The metadata of all added raspberry nodes
-     * @return {List<Metadata>}
+     * The metadata of all added raspberry nodes with their last observation
+     * @return {List<RaspberryLastObservation>}
      */
-    public List<Metadata> getRaspberryNodes() {
+    public List<RaspberryLastObservation> getRaspberryNodes() {
         return raspberryNodes;
     }
 
-    public void setRaspberryNodes(List<Metadata> raspberryNodes) {
+
+    /**
+     * @see {@link AddedNodesMetadata#raspberryNodes}
+     */
+    public void setRaspberryNodes(List<RaspberryLastObservation> raspberryNodes) {
         this.raspberryNodes = raspberryNodes;
     }
 
