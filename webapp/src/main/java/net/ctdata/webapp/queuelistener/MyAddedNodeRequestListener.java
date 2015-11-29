@@ -1,8 +1,8 @@
 package net.ctdata.webapp.queuelistener;
 
 import net.ctdata.common.Messages.AddedNodesMetadata;
-import net.ctdata.common.Messages.Metadata;
-import net.ctdata.common.Messages.Partial.SensorMetadata;
+import net.ctdata.common.Messages.Partial.SensorLastObservation;
+import net.ctdata.common.Messages.RaspberryLastObservation;
 import net.ctdata.common.Queue.Listeners.AddedNodesMetadataListener;
 import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.webapp.controllers.AddedNode;
@@ -52,6 +52,7 @@ public class MyAddedNodeRequestListener extends AddedNodesMetadataListener {
                 addedNode.setSensorName("Temperature");
                 addedNode.setSensorType("32");
                 addedNode.setPollingInterval(50);
+                addedNode.setLastObservation(23.424);
                 addedNode.setLatitude(36.485);
                 addedNode.setLongitude(-121.845);
                 addedNodes.add(addedNode);
@@ -68,14 +69,15 @@ public class MyAddedNodeRequestListener extends AddedNodesMetadataListener {
         System.out.println("Added Node");
         System.out.println(String.format("Received metadata for node %s", message.getRaspberryNodes()));
 
-        for (Metadata r: message.getRaspberryNodes()) {
+        for (RaspberryLastObservation r: message.getRaspberryNodes()) {
             addedNode.setUrl(r.getNodeURL());
 
             addedNode.setNodeID(r.getRaspberryNode());
-            for (SensorMetadata s : r.getSensors()) {
+            for (SensorLastObservation s : r.getSensors()) {
                 addedNode.setSId(s.getSensor());
                 addedNode.setSensorName(s.getName());
                 addedNode.setSensorType(s.getType());
+                addedNode.setLastObservation(s.getLastObservation());
                 addedNode.setPollingInterval(s.getPollingInterval());
                 addedNode.setLatitude(s.getLatitude());
                 addedNode.setLongitude(s.getLongitude());

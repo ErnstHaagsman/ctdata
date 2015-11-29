@@ -14,6 +14,7 @@ public class AddedNode {
     private int pollingInterval;
     private double latitude;
     private double longitude;
+    double lastObservation;
 
     public String getUrl() {
         return url;
@@ -69,5 +70,13 @@ public class AddedNode {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public double getLastObservation() {
+        return lastObservation;
+    }
+
+    public void setLastObservation(double lastObservation) {
+        this.lastObservation = lastObservation;
     }
 }
