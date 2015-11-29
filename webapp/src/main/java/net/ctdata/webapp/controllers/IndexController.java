@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.LinkedList;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
@@ -58,7 +59,8 @@ public class IndexController {
         RabbitMqConnection queueConn = new RabbitMqConnection("amqp://localhost");
         queueConn.SendMessage(rn);
         MyAddedNodeRequestListener an= new MyAddedNodeRequestListener(UUID.randomUUID(),queueConn);
-        //an.setAddNode();
+        an.setAddNode();
+        LinkedList<AddedNode> output = an.getAddedNodes();
         model.addAttribute("addedNodes", an.getAddedNodes());
         return "admin";
     }
