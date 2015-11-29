@@ -67,6 +67,7 @@ public class UserSensorsConnectorTest {
     public void updateTest() throws SQLException{
         UserSensors userSensors = new UserSensors("root", this.raspberryNodeUrlTwo);
         int i = this.userSensorConn.insertInto(userSensors);
+        userSensors.setConnectionFlag('Y');
         i = this.userSensorConn.updateFrom(userSensors);
         userSensorConn.deleteFrom(userSensors);
         assertTrue(i==1);
@@ -85,8 +86,10 @@ public class UserSensorsConnectorTest {
         List<UserSensors> list = new ArrayList<UserSensors>();
 
         UserSensors userSensors1 = new UserSensors("localadmin", this.raspberryNodeUrlOne);
+        userSensors1.setConnectionFlag('Y');
         int i = this.userSensorConn.insertInto(userSensors1);
         UserSensors userSensors2 = new UserSensors("localroot", this.raspberryNodeUrlTwo);
+        userSensors2.setConnectionFlag('Y');
         i = this.userSensorConn.insertInto(userSensors2);
 
         list = this.userSensorConn.selectAll();
