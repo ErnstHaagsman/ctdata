@@ -1,6 +1,7 @@
 package net.ctdata.webapp.controllers;
 
 import net.ctdata.common.Messages.AddNode;
+import net.ctdata.common.Messages.HistoryRequest;
 import net.ctdata.common.Messages.RequestAddedNodes;
 import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.webapp.queuelistener.MyAddedNodeRequestListener;
@@ -80,6 +81,22 @@ public class IndexController {
         //model.addAttribute("observationsArrayList", an.getObservationsJSON());
         model.addAttribute("observationsJSON", an.getObservationsJSON());
         return "testMap";
+    }
+
+    @RequestMapping(value="/history", method=RequestMethod.GET)
+    public String History(Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
+
+        HistoryRequest rn = new HistoryRequest();
+        rn.setRaspberryNode(UUID.randomUUID());
+        rn.setSensor(9);
+        //rn.setInterfaceType("Public");
+        RabbitMqConnection queueConn = new RabbitMqConnection("amqp://localhost");
+        queueConn.SendMessage(rn);
+        MyObservationListener an= new MyObservationListener(UUID.randomUUID(),queueConn);
+        an.setObservations();
+        //model.addAttribute("observationsArrayList", an.getObservationsJSON());
+        model.addAttribute("observationsJSON", an.getObservationsJSON());
+        return "history";
     }
 
     @RequestMapping(value="/greeting", method=RequestMethod.POST)
