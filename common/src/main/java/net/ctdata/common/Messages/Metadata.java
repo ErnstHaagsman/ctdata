@@ -45,7 +45,7 @@ public class Metadata extends RaspberryMessage {
     @Override
     @JsonIgnore
     public String getRoutingKey() {
-        return String.format("notedata.meta.%s", getNodeURL());
+        return String.format("nodedata.meta.%s", getNodeURL());
     }
 
     @Override
