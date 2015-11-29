@@ -41,22 +41,22 @@ public class MyAddedNodeRequestListener extends AddedNodesMetadataListener {
     public ArrayList<AddedNode> getAddedNodes() {
         return addedNodes;
     }
+
     public void setAddNode(){
 
-        addedNode.setUrl("ws://localhost:8765");
+            addedNode.setUrl("ws://localhost:8765");
 
-        addedNode.setNodeID(UUID.randomUUID());
+            addedNode.setNodeID(UUID.randomUUID());
 
-        addedNode.setSId(666);
-        addedNode.setSensorName("Temperature");
-        addedNode.setSensorType("32");
-        addedNode.setPollingInterval(50);
-        addedNode.setLastObservation(23.424);
-        addedNode.setLatitude(36.485);
-        addedNode.setLongitude(-121.845);
-        addedNodes.add(addedNode);
+                addedNode.setSId(666);
+                addedNode.setSensorName("Temperature");
+                addedNode.setSensorType("32");
+                addedNode.setPollingInterval(50);
+                addedNode.setLastObservation(23.424);
+                addedNode.setLatitude(36.485);
+                addedNode.setLongitude(-121.845);
+                addedNodes.add(addedNode);
     }
-
 
     @Override
     public void HandleMessage(AddedNodesMetadata message) {
