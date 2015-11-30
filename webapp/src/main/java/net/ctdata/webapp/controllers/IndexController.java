@@ -146,5 +146,4 @@ public class IndexController {
         queueConn.SendMessage(an);
         return "index";
     }
-
 }
