@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="utf-8"/>
 		<title>CTData</title>
@@ -2464,14 +2464,17 @@
 			<div id="add-new-event">
 			<h4 class="page-header">Change Frequency</h4>
 			<div class="form-group">
-				<label>Enter Raspberry Node</label>
-				<input type="text" id="new-event-title" class="form-control"/>
-				<label>Enter Sensor</label>
-				<input type="text" id="new-event-title" class="form-control"/>
-				<label>New Frequency</label>
-				<input type="text" id="new-event-title" class="form-control"/>
+				<form action="#" th:action="@{/changeFrequency}" th:object="${frequency}" method="post">
+				<p><label>Enter Raspberry Node</label>
+				<input type="text" th:field="*{raspberryNode}"  class="form-control"/></p>
+				<p><label>Enter Sensor</label>
+				<input type="text" th:field="*{sensor}"  class="form-control"/></p>
+				<p><label>New Frequency</label>
+				<input type="text" th:field="*{frequencyN}"  class="form-control"/></p>
+				<input type="submit" value="Submit" />
+				
+			</form>	
 			</div>
-				<a href="#" id="new-event-add" class="btn btn-primary pull-right">Change Frequency</a>
 				<div class="clearfix"></div>
 			</div>
 		
