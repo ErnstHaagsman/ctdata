@@ -37,7 +37,7 @@ public class IndexController {
     @RequestMapping("/")
     public String index(Model model) {
         model.addAttribute("message", "HELLO!");
-        return "hello";
+        return "page_login";
     }
 
     @RequestMapping("/index")
