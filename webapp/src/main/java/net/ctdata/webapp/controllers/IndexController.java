@@ -3,6 +3,7 @@ package net.ctdata.webapp.controllers;
 import net.ctdata.common.Messages.AddNode;
 import net.ctdata.common.Messages.HistoryRequest;
 import net.ctdata.common.Messages.RequestAddedNodes;
+import net.ctdata.common.Messages.UpdateFrequency;
 import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.webapp.queuelistener.MyAddedNodeRequestListener;
 import net.ctdata.webapp.queuelistener.MyHistoryResponseListener;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
@@ -63,15 +65,10 @@ public class IndexController {
         return "greeting";
     }
 
-    @RequestMapping(value="/addedNodes", method=RequestMethod.GET)
-    public String addedNode(Model model) {
-        model.addAttribute("greeting", new Greeting());
-        return "addedNodes";
-    }
 
     @RequestMapping(value="/changeFrequency", method=RequestMethod.GET)
     public String changeFrequency(Model model) {
-        model.addAttribute("greeting", new Greeting());
+        model.addAttribute("frequency", new Frequency());
         return "changeFrequency";
     }
 
@@ -81,8 +78,8 @@ public class IndexController {
         return "HistoryRequest";
     }
 
-    @RequestMapping(value="/admin", method=RequestMethod.GET)
-    public String adminForm(Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
+    @RequestMapping(value="/addedNodes", method=RequestMethod.GET)
+    public String addedNodes(Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
         /*RequestAddedNodes rn = new RequestAddedNodes();
         rn.setRequestId(UUID.randomUUID());
         rn.setUserId("Administrator");
@@ -100,7 +97,7 @@ public class IndexController {
         //an.setAddNode();
 
         model.addAttribute("addedNodes", an.getAddedNodes());
-        return "admin";
+        return "addedNodes";
     }
 
     @RequestMapping(value="/testMap", method=RequestMethod.GET)
@@ -146,5 +143,20 @@ public class IndexController {
         RabbitMqConnection queueConn = new RabbitMqConnection("amqp://localhost");
         queueConn.SendMessage(an);
         return "index";
+    }
+
+    @RequestMapping(value="/changeFrequency", method=RequestMethod.POST)
+    public String frequencySubmit(@Valid Frequency frequency, Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
+        model.addAttribute("frequency", frequency);
+        UUID raspberryNode = frequency.getRaspberryNode();
+        int sensor = frequency.getSensor();
+        int frequenc = frequency.getFrequencyN();
+        UpdateFrequency an =new UpdateFrequency();
+        an.setRaspberryNode(raspberryNode);
+        an.setSensor(sensor);
+        an.setPollingFrequency(frequenc);
+        RabbitMqConnection queueConn = new RabbitMqConnection("amqp://localhost");
+        queueConn.SendMessage(an);
+        return "changeFrequency";
     }
 }
