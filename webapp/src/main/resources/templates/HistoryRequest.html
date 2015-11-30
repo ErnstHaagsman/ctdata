@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta charset="utf-8"/>
 		<title>CTData</title>
@@ -2449,19 +2450,22 @@
 			<div id="add-new-event">
 			<h4 class="page-header">History Request</h4>
 			<div class="form-group">
+				<form action="#" th:action="@{/historyresponse}" th:object="${historyreq}" method="post">
 				<label>Enter Raspberry Node</label>
-				<input type="text" id="new-event-title" class="form-control"/>
+				<input type="text" class="form-control" th:field="*{raspberryNode}" />
 				<label>Enter Sensor</label>
-				<input type="text" id="new-event-title" class="form-control"/>
+				<input type="text" class="form-control" th:field="*{sensorID}" />
 				<label>Enter Interval</label>
-				<input type="text" id="new-event-title" class="form-control"/>
+				<input type="text" class="form-control" th:field="*{interval}" />
+				<input type="submit" value="Get History Data" /> <input type="reset" value="Reset" />
+					</form>
 			</div>
-				<a href="#" id="new-event-add" class="btn btn-primary pull-right">History Data</a>
+
 				<div class="clearfix"></div>
 			</div>
 		
 			<div class="preloader">
-				<img src="img/devoops_getdata.gif" class="devoops-getdata" alt="preloader"/>
+
 			</div>
 			<div id="ajax-content"></div>
 		</div>

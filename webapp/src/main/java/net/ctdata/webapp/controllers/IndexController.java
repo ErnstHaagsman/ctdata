@@ -5,6 +5,7 @@ import net.ctdata.common.Messages.HistoryRequest;
 import net.ctdata.common.Messages.RequestAddedNodes;
 import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.webapp.queuelistener.MyAddedNodeRequestListener;
+import net.ctdata.webapp.queuelistener.MyHistoryResponseListener;
 import net.ctdata.webapp.queuelistener.MyObservationListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -76,7 +77,7 @@ public class IndexController {
 
     @RequestMapping(value="/HistoryRequest", method=RequestMethod.GET)
     public String HistoryRequest(Model model) {
-        model.addAttribute("greeting", new Greeting());
+        model.addAttribute("historyreq", new HistReq());
         return "HistoryRequest";
     }
 
@@ -118,20 +119,20 @@ public class IndexController {
         return "testMap";
     }
 
-    @RequestMapping(value="/history", method=RequestMethod.GET)
-    public String History(Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
+    @RequestMapping(value="/historyresponse", method=RequestMethod.POST)
+    public String historyReqSubmit(@ModelAttribute HistReq hr, Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
 
-        HistoryRequest rn = new HistoryRequest();
-        rn.setRaspberryNode(UUID.randomUUID());
-        rn.setSensor(9);
-        //rn.setInterfaceType("Public");
+        HistoryRequest historyRequest = new HistoryRequest();
+        historyRequest.setRaspberryNode(hr.getRaspberryNode());
+        historyRequest.setSensor(hr.getSensorID());
+        historyRequest.setTimePeriod(hr.getInterval());
+
         RabbitMqConnection queueConn = new RabbitMqConnection("amqp://localhost");
-        queueConn.SendMessage(rn);
-        MyObservationListener an= new MyObservationListener(UUID.randomUUID(),queueConn);
-        //an.setObservations();
-        //model.addAttribute("observationsArrayList", an.getObservationsJSON());
-        model.addAttribute("observationsJSON", an.getObservationsJSON());
-        return "history";
+        queueConn.SendMessage(historyRequest);
+
+        MyHistoryResponseListener myHistoryResponseListener = new MyHistoryResponseListener(queueConn);
+        model.addAttribute("historyResponse", myHistoryResponseListener.getHistoryResponse());
+        return "historyresponse";
     }
 
     @RequestMapping(value="/greeting", method=RequestMethod.POST)

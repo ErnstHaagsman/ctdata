@@ -10,16 +10,20 @@ import net.ctdata.common.Queue.RabbitMqConnection;
 public class MyHistoryResponseListener extends HistoryResponseListener{
 
     private RabbitMqConnection queueConn;
+    HistoryResponse response = new HistoryResponse();
 
     public MyHistoryResponseListener(RabbitMqConnection queueConn){
         super();
         this.queueConn = queueConn;
     }
 
+    public HistoryResponse getHistoryResponse() {
+        return response;
+    }
+
     @Override
     public void HandleMessage(HistoryResponse message) {
 
-        HistoryResponse response = new HistoryResponse();
         response.setRequestId(message.getRequestId());
         response.setRaspberryNode(message.getRaspberryNode());
         response.setSensor(message.getSensor());

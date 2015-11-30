@@ -1,0 +1,123 @@
+<!doctype html>
+ <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <title>Temperature data form Sensors</title>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <style>
+	html, body {
+	height: 100%;
+}
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, Sans-Serif;
+	font-size: 16px;
+	margin: 0;
+	padding: 0;
+}
+#map {
+	height: 100%;
+	width: 100%;
+}
+#menu {
+	height: 100%;
+	width: 40%;	
+
+}
+.notification {
+	position: absolute;
+	z-index: 100;
+	bottom: 30px;
+	left: 50%;
+	width: 50%;
+	padding: 10px 2%;
+	margin-left: -25%;
+
+	background: orange;
+	color: #000;
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+
+	border: 1px solid #dd8500;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+	box-shadow: 0 0 10px rgba(0,0,0,.3);
+}
+a {
+	color: #0069D6;
+}
+a:hover,
+a:focus {
+	color: #0050A3;
+}
+
+ </style>
+ 
+</head>
+<body>
+ 
+  <div id="map"></div>
+  
+  <div class="notification">
+  	This is a dynamic display of temperature data from the sensors
+  </div>
+
+  <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCAWXD0g0fbXbEkEmGP8_tJDDPtYt8S4DE&sensor=false"></script>
+  <script th:inline="javascript" type="text/javascript">
+  (function() {
+
+
+	window.onload = function() {
+
+		// Creating a new map
+		var map = new google.maps.Map(document.getElementById("map"), {
+          center: new google.maps.LatLng(37.5, -122.2),
+          zoom: 10,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+
+		// Creating the JSON data
+		var string = [[${observationsJSON}]];
+		var json = $.parseJSON(string);
+
+		// Creating a global infoWindow object that will be reused by all markers
+		var infoWindow = new google.maps.InfoWindow();
+
+		// Looping through the JSON data
+		for (var i = 0, length = json.length; i < length; i++) {
+			var data = json[i],
+				latLng = new google.maps.LatLng(data.latitude, data.longitude);
+
+			// Creating a marker and putting it on the map
+			var marker = new google.maps.Marker({
+				position: latLng,
+				map: map,
+				title: data.sensorId
+			});
+
+			// Creating a closure to retain the correct data
+			(function(marker, data) {
+
+				// Attaching a click event to the current marker
+				google.maps.event.addListener(marker, "click", function(e) {
+					infoWindow.setContent(data.observationData);
+					infoWindow.open(map, marker);
+				});
+
+
+			})(marker, data);
+
+		}
+
+	}
+
+})();
+  
+  
+  </script>
+
+</body>
+</html>
