@@ -37,11 +37,47 @@ public class IndexController {
         return "hello";
     }
 
+    @RequestMapping("/index")
+    public String inde(Model model) {
+        model.addAttribute("greeting", new Greeting());
+        return "index";
+    }
+
+    @RequestMapping(value="/login", method=RequestMethod.GET)
+    public String login(Model model) {
+        model.addAttribute("message", "HELLO!");
+        return "page_login";
+    }
+
+    @RequestMapping(value="/welcome", method=RequestMethod.GET)
+    public String welcome(Model model) {
+        model.addAttribute("message", "HELLO!");
+        return "welcome";
+    }
+
     MyAddedNodeRequestListener addedNode;
-    @RequestMapping(value="/greeting", method=RequestMethod.GET)
+    @RequestMapping(value="/dashboard", method=RequestMethod.GET)
     public String greetingForm(Model model) {
         model.addAttribute("greeting", new Greeting());
         return "greeting";
+    }
+
+    @RequestMapping(value="/addedNodes", method=RequestMethod.GET)
+    public String addedNode(Model model) {
+        model.addAttribute("greeting", new Greeting());
+        return "addedNodes";
+    }
+
+    @RequestMapping(value="/changeFrequency", method=RequestMethod.GET)
+    public String changeFrequency(Model model) {
+        model.addAttribute("greeting", new Greeting());
+        return "changeFrequency";
+    }
+
+    @RequestMapping(value="/HistoryRequest", method=RequestMethod.GET)
+    public String HistoryRequest(Model model) {
+        model.addAttribute("greeting", new Greeting());
+        return "HistoryRequest";
     }
 
     @RequestMapping(value="/admin", method=RequestMethod.GET)
@@ -108,7 +144,7 @@ public class IndexController {
         an.setUserId("Administrator");
         RabbitMqConnection queueConn = new RabbitMqConnection("amqp://localhost");
         queueConn.SendMessage(an);
-        return "result";
+        return "index";
     }
 
 }
