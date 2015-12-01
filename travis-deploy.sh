@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# if [[ $TRAVIS_BRANCH == 'master' ]]
+if [[ $TRAVIS_BRANCH == 'master' ]]; then
 
     curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
 
@@ -13,13 +13,10 @@
 
     zip jars.zip ./jars/*.jar
 
-    export ARTIFACTS_DEBUG=1
-
-
     artifacts upload \
         --s3-region us-west-1 \
         --target-paths build \
         --permissions public-read \
         jars.zip
 
-# fi
+fi
