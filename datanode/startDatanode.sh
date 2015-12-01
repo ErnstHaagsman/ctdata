@@ -8,4 +8,4 @@ gradle clean
 gradle build
 echo -e "\n\n--------------- Start the datanode server --------------\n\n"
 cd build/libs
-java -jar CtdataDatanodeServer-1.0.0.jar
+java -jar CtdataDatanodeServer-1.0.0.jar -dbconfig $here/database-config.json -queueconfig $here/rabbitmq-config.json
