@@ -36,6 +36,7 @@ class RaspNodeWebsocketClient extends WebSocketClient {
             if (incomingClass == Metadata.class){
                 Metadata metadata = (Metadata)incoming;
                 logger.info(String.format("Received metadata for node %s", metadata.getRaspberryNode()));
+                parent.setUUID(metadata.getRaspberryNode());
                 metadata.setNodeURL(this.getURI().toString());
                 conn.SendMessage(metadata);
             } else if (incomingClass == Observation.class){
