@@ -1,3 +1,4 @@
+/*
 package net.ctdata.datanode.controllers.dbconnectors;
 
 import net.ctdata.datanode.DatanodeManager;
@@ -17,9 +18,11 @@ import java.util.List;
 import java.util.Properties;
 
 import static org.junit.Assert.assertTrue;
+*/
 /**
  * Created by aditi on 15/11/15.
- */
+ *//*
+
 public class UsersConnectorTest {
     private DatabaseConnector dbConnector;
     private UsersConnector userConn;
@@ -94,3 +97,4 @@ public class UsersConnectorTest {
         }
     }
 }
+*/

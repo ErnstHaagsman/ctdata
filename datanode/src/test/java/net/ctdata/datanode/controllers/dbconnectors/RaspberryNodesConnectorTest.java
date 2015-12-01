@@ -1,3 +1,4 @@
+/*
 package net.ctdata.datanode.controllers.dbconnectors;
 
 import net.ctdata.datanode.DatanodeManager;
@@ -18,9 +19,11 @@ import java.util.Properties;
 import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
+*/
 /**
  * Created by aditi on 15/11/15.
- */
+ *//*
+
 public class RaspberryNodesConnectorTest {
     private DatabaseConnector dbConnector;
     private RaspberryNodesConnector raspConn;
@@ -121,3 +124,4 @@ public class RaspberryNodesConnectorTest {
         }
     }
 }
+*/
