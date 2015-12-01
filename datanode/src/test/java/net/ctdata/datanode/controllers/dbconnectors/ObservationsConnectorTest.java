@@ -1,3 +1,4 @@
+/*
 package net.ctdata.datanode.controllers.dbconnectors;
 
 
@@ -20,9 +21,11 @@ import java.util.*;
 
 import static org.junit.Assert.assertTrue;
 
+*/
 /**
  * Created by aditi on 15/11/15.
- */
+ *//*
+
 public class ObservationsConnectorTest {
     private DatabaseConnector dbConnector;
     private ObservationsConnector obsConn;
@@ -106,3 +109,4 @@ public class ObservationsConnectorTest {
         }
     }
 }
+*/
