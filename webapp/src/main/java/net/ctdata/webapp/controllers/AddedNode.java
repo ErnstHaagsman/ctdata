@@ -1,20 +1,30 @@
 package net.ctdata.webapp.controllers;
 
+import java.util.LinkedList;
 import java.util.UUID;
 
 /**
  * Created by Nimesh on 11/28/2015.
  */
 public class AddedNode {
-    private String url;
-    private UUID nodeID;
-    private double sId;
-    private String sensorName;
-    private String sensorType;
-    private int pollingInterval;
-    private double latitude;
-    private double longitude;
-    double lastObservation;
+    public String url;
+    public UUID nodeID;
+    public double sId;
+    public String sensorName;
+    public String sensorType;
+    public int pollingInterval;
+    public double latitude;
+    public double longitude;
+    public double lastObservation;
+    public LinkedList<AddedNode> addedNodes = new LinkedList<AddedNode>();
+
+    public LinkedList<AddedNode> getAddedNodes() {
+        return addedNodes;
+    }
+
+    public void setAddedNodes(LinkedList<AddedNode> addedNodes) {
+        this.addedNodes = addedNodes;
+    }
 
     public String getUrl() {
         return url;

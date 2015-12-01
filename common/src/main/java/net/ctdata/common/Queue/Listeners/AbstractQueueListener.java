@@ -1,5 +1,6 @@
 package net.ctdata.common.Queue.Listeners;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ctdata.common.Json.MapperSingleton;
 import net.ctdata.common.Messages.Abstract.AbstractMessage;
@@ -36,5 +37,5 @@ public abstract class AbstractQueueListener<T> implements QueueListener {
      *
      * @param message The message, deserialized from JSON. Subtype of {@link AbstractMessage}
      */
-    public abstract void HandleMessage(T message);
+    public abstract void HandleMessage(T message) throws JsonProcessingException;
 }

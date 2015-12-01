@@ -82,6 +82,7 @@ public class MyAddedNodeRequestListener extends AddedNodesMetadataListener {
                 addedNode.setLatitude(s.getLatitude());
                 addedNode.setLongitude(s.getLongitude());
             addedNodes.add(addedNode);
+                addedNode = new AddedNode();
             }
         }
     }

@@ -2487,8 +2487,6 @@
 					<thead>
 						<tr>
 							<th>URL</th>
-							<th>Node ID</th>
-							<th>Sensor ID</th>
 							<th>Sensor Name</th>
 							<th>Sensor Type</th>
 							<th>Last Observation</th>
@@ -2500,8 +2498,6 @@
 					<tbody>
 						 <tr th:each="addedNode : ${addedNodes}">
 						<td th:text="${addedNode.url}"></td>
-						<td th:text="${addedNode.nodeID}"></td>
-						<td th:text="${addedNode.sId}"></td>
 						<td th:text="${addedNode.sensorName}"></td>
 						<td th:text="${addedNode.sensorType}"></td>
 						<td th:text="${addedNode.lastObservation}"></td>
