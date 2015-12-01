@@ -32,6 +32,7 @@ public abstract class AbstractSensor implements Sensor {
         sensorMetadata.setLongitude(getLongitude());
         sensorMetadata.setLatitude(getLatitude());
         sensorMetadata.setName(getName());
+        sensorMetadata.setSensor(getNumber());
         return sensorMetadata;
     }
 
