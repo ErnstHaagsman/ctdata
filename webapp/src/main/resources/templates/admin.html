@@ -32,6 +32,7 @@
     </tr>
 
     <tr th:each="addedNode : ${addedNodes}">
+<<<<<<< HEAD
 
         <td th:text="${addedNode.url}"></td>
 
@@ -44,6 +45,18 @@
         <td th:text="${addedNode.sensorType}"></td>
 
         <td th:text="${addedNode.lastObservation}"></td>
+=======
+
+        <td th:text="${addedNode.url}"></td>
+
+        <td th:text="${addedNode.nodeID}"></td>
+
+        <td th:text="${addedNode.sId}"></td>
+
+        <td th:text="${addedNode.sensorName}"></td>
+
+        <td th:text="${addedNode.sensorType}"></td>
+>>>>>>> web UI changes for Added Node
 
         <td th:text="${addedNode.pollingInterval}"></td>
 

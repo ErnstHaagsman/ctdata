@@ -52,7 +52,10 @@ public class MyAddedNodeRequestListener extends AddedNodesMetadataListener {
                 addedNode.setSensorName("Temperature");
                 addedNode.setSensorType("32");
                 addedNode.setPollingInterval(50);
+<<<<<<< HEAD
                 addedNode.setLastObservation(23.424);
+=======
+>>>>>>> web UI changes for Added Node
                 addedNode.setLatitude(36.485);
                 addedNode.setLongitude(-121.845);
                 addedNodes.add(addedNode);
@@ -69,7 +72,11 @@ public class MyAddedNodeRequestListener extends AddedNodesMetadataListener {
         System.out.println("Added Node");
         System.out.println(String.format("Received metadata for node %s", message.getRaspberryNodes()));
 
+<<<<<<< HEAD
         for (RaspberryLastObservation r: message.getRaspberryNodes()) {
+=======
+        for (Metadata r: message.getRaspberryNodes()) {
+>>>>>>> web UI changes for Added Node
             addedNode.setUrl(r.getNodeURL());
 
             addedNode.setNodeID(r.getRaspberryNode());

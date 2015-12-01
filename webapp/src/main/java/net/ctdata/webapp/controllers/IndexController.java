@@ -1,5 +1,6 @@
 package net.ctdata.webapp.controllers;
 
+<<<<<<< HEAD
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -9,6 +10,10 @@ import net.ctdata.common.Messages.Partial.SensorMetadata;
 import net.ctdata.common.Queue.Listeners.AddedNodesMetadataListener;
 import net.ctdata.common.Queue.Listeners.HistoryResponseListener;
 import net.ctdata.common.Queue.Listeners.MetadataListener;
+=======
+import net.ctdata.common.Messages.AddNode;
+import net.ctdata.common.Messages.RequestAddedNodes;
+>>>>>>> web UI changes for Added Node
 import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.webapp.queuelistener.MyAddedNodeRequestListener;
 import net.ctdata.webapp.queuelistener.MyObservationListener;
@@ -18,12 +23,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+<<<<<<< HEAD
 import javax.validation.Valid;
+=======
+>>>>>>> web UI changes for Added Node
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+<<<<<<< HEAD
 import java.util.LinkedList;
+=======
+>>>>>>> web UI changes for Added Node
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
@@ -80,6 +91,7 @@ public class IndexController {
         return "greeting";
     }
 
+<<<<<<< HEAD
 
     @RequestMapping(value="/changeFrequency", method=RequestMethod.GET)
     public String changeFrequency(Model model) {
@@ -99,6 +111,10 @@ public class IndexController {
     }
     @RequestMapping(value="/addedNodes", method=RequestMethod.GET)
     public String addedNodes(final Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException, InterruptedException {
+=======
+    @RequestMapping(value="/admin", method=RequestMethod.GET)
+    public String adminForm(Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
+>>>>>>> web UI changes for Added Node
         /*RequestAddedNodes rn = new RequestAddedNodes();
         rn.setRequestId(UUID.randomUUID());
         rn.setUserId("Administrator");
@@ -112,6 +128,7 @@ public class IndexController {
         rn.setInterfaceType("Administrator");
         RabbitMqConnection queueConn = new RabbitMqConnection("amqp://localhost");
         queueConn.SendMessage(rn);
+<<<<<<< HEAD
         queueConn.RegisterListener(new AddedNodesMetadataListener() {
             @Override
             public void HandleMessage(AddedNodesMetadata message) {
@@ -220,11 +237,25 @@ public class IndexController {
         long id = greeting.getId();
         String url = greeting.getUrl();
 
+=======
+        MyAddedNodeRequestListener an= new MyAddedNodeRequestListener(UUID.randomUUID(),queueConn);
+        //an.setAddNode();
+        model.addAttribute("addedNodes", an.getAddedNodes());
+        return "admin";
+    }
+
+    @RequestMapping(value="/greeting", method=RequestMethod.POST)
+    public String greetingSubmit(@ModelAttribute Greeting greeting, Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
+        model.addAttribute("greeting", greeting);
+        long id = greeting.getId();
+        String url = greeting.getUrl();
+>>>>>>> web UI changes for Added Node
         AddNode an =new AddNode();
         an.setNodeURL(url);
         an.setUserId("Administrator");
         RabbitMqConnection queueConn = new RabbitMqConnection("amqp://localhost");
         queueConn.SendMessage(an);
+<<<<<<< HEAD
       //  MyAddNodeResponseListener anr= new MyAddNodeResponseListener();
 
         queueConn.RegisterListener(new MetadataListener() {
@@ -254,6 +285,8 @@ public class IndexController {
         });
         Thread t = new Thread();
         t.sleep(3000);
+=======
+>>>>>>> web UI changes for Added Node
         return "result";
     }
 

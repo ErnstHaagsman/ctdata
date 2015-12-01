@@ -36,8 +36,11 @@ public class WebApp {
         }
         conn.RegisterListener(new MyAddedNodeRequestListener(conn));
         conn.RegisterListener(new MyAddNodeResponseListener(conn));
+<<<<<<< HEAD
         conn.RegisterListener(new MyObservationListener(conn));
         conn.RegisterListener(new MyHistoryResponseListener(conn));
+=======
+>>>>>>> web UI changes for Added Node
     }
 
 }
