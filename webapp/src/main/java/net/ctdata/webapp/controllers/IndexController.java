@@ -35,9 +35,18 @@ public class IndexController {
 //    }
 
     @RequestMapping("/")
-    public String index(Model model) {
-        model.addAttribute("message", "HELLO!");
-        return "page_login";
+    public String MapUI(Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
+        RequestAddedNodes rn = new RequestAddedNodes();
+        rn.setRequestId(UUID.randomUUID());
+        rn.setUserId("");
+        rn.setInterfaceType("Public");
+        RabbitMqConnection queueConn = new RabbitMqConnection("amqp://localhost");
+        queueConn.SendMessage(rn);
+        MyObservationListener an= new MyObservationListener(UUID.randomUUID(),queueConn);
+        //an.setObservations();
+        //model.addAttribute("observationsArrayList", an.getObservationsJSON());
+        model.addAttribute("observationsJSON", an.getObservationsJSON());
+        return "testMap";
     }
 
     @RequestMapping("/index")
