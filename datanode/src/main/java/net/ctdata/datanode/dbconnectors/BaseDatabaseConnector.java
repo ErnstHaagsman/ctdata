@@ -1,5 +1,6 @@
 package net.ctdata.datanode.dbconnectors;
 
+import net.ctdata.datanode.configuration.DatabaseConfiguration;
 import net.ctdata.datanode.utility.DatanodeConstants;
 import org.apache.log4j.Logger;
 
@@ -15,23 +16,24 @@ public class BaseDatabaseConnector implements DatabaseConnector{
 
     private static Logger logger = Logger.getLogger(BaseDatabaseConnector.class);
     private Connection conn;
-    private Properties properties;
+    private DatabaseConfiguration dbConfig;
     private Statement stmt;
 
-    public BaseDatabaseConnector(Properties dbProperties){
-        this.properties = dbProperties;
+    public BaseDatabaseConnector(DatabaseConfiguration dbConfig){
+        this.dbConfig = dbConfig;
     }
+
 
 
     @Override
     public int establishConnection() throws SQLException {
 
-            String url = "jdbc:mysql://" + this.properties.getProperty("databasehost")
-                            + ":" + this.properties.getProperty("databaseport") + "/" + this.properties.getProperty("databaseschema");
+            String url = "jdbc:mysql://" + dbConfig.getDatabaseHost()
+                            + ":" + dbConfig.getDatabasePort() + "/" + dbConfig.getDatabaseSchema();
 
             logger.info("Attempting to connect to the database server at "+ url);
 
-            this.conn = DriverManager.getConnection(url, this.properties.getProperty("databaseuser"), this.properties.getProperty("databasepswd"));
+            this.conn = DriverManager.getConnection(url, dbConfig.getDatabaseUser(), dbConfig.getDatabasePswd());
 
             if(this.conn!=null) {
                 logger.info("Database connection successfully established..");

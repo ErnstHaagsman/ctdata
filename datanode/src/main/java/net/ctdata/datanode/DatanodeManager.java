@@ -1,12 +1,20 @@
 package net.ctdata.datanode;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.ctdata.common.Json.MapperSingleton;
 import net.ctdata.common.Queue.RabbitMqConnection;
+import net.ctdata.datanode.configuration.CliOptions;
+import net.ctdata.datanode.configuration.DatabaseConfiguration;
+import net.ctdata.datanode.configuration.RabbitMQConfiguration;
 import net.ctdata.datanode.dbconnectors.BaseDatabaseConnector;
 import net.ctdata.datanode.dbconnectors.DatabaseConnector;
 import net.ctdata.datanode.queuelisteners.*;
+import org.apache.commons.cli.*;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -40,13 +48,41 @@ public class DatanodeManager {
             logger.info("Database manager server started successfully!!");
 
             // fetching the database connection properties
-            logger.info("Setting up the database connection..");
-            input = DatanodeManager.class.getResourceAsStream("dbconfig.properties");
-            properties = new Properties();
-            properties.load(input);
+            logger.debug("Fetching the Command Line Options");
+            CommandLineParser parser = new DefaultParser();
+            Options options = CliOptions.getOptions();
+            BasicConfigurator.configure();
+            DatabaseConfiguration dbConfig = null;
+            RabbitMQConfiguration queueConfig = null;
+
+            try {
+                CommandLine cmd = parser.parse(options, args);
+
+                String dbfileName = cmd.getOptionValue(CliOptions.OPTIONS_DBCONFIG);
+                File dbconfigFile = new File(dbfileName);
+
+                ObjectMapper dbmapper = new MapperSingleton().getMapper();
+                dbConfig = dbmapper.readValue(dbconfigFile, DatabaseConfiguration.class);
+
+                String qfileName = cmd.getOptionValue(CliOptions.OPTIONS_QCONFIG);
+                File qconfigFile = new File(qfileName);
+
+                ObjectMapper queuemapper = new MapperSingleton().getMapper();
+                queueConfig = queuemapper.readValue(qconfigFile, RabbitMQConfiguration.class);
+
+            } catch (ParseException e) {
+                logger.error("Could not parse CLI options: " + e.getMessage());
+                HelpFormatter formatter = new HelpFormatter();
+                formatter.printHelp("datanode", options);
+                System.exit(-1);
+            } catch (IOException e) {
+                logger.error("Could not read configuration file: " + e.getMessage());
+                System.exit(-1);
+            }
 
             // Initialising the database connection
-            dbConnector = new BaseDatabaseConnector(properties);
+            logger.debug("Setting up the database connection..");
+            dbConnector = new BaseDatabaseConnector(dbConfig);
 
             // Establishing the database connection
             try {
@@ -54,17 +90,15 @@ public class DatanodeManager {
             }catch (SQLException ex){
                 logger.error("SQLException thrown while connecting to the database due to " + ex.getMessage());
                 logger.info("Stoping server..");
-                System.exit(1);
+                System.exit(-1);
             }
 
-            //fetching the rabbitMQ connection properties
-            logger.info("Setting up the RabbitMQ connection..");
-            input = DatanodeManager.class.getResourceAsStream("rabbitmq.properties");
-            properties = new Properties();
-            properties.load(input);
+            logger.debug("Database connection established");
 
             //Establishing the RabbitMQ connection
-            conn = new RabbitMqConnection(properties.getProperty("rabbitmqUrl"));
+            logger.debug("Setting up the RabbitMQ connection..");
+            conn = new RabbitMqConnection(queueConfig.getRabbitmqUri());
+            logger.debug("RabbitMQ connection established");
 
             // Register ADD_NODE message listener
             logger.debug("Registering ADD_NODE message listener..");
