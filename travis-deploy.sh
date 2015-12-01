@@ -11,6 +11,15 @@
     mv sensorgateway/build/libs/*.jar ./jars/
     mv webapp/build/libs/*.jar ./jars/
 
-    artifacts upload jars/
+    zip jars.zip ./jars/*.jar
+
+    export ARTIFACTS_DEBUG=1
+
+
+    artifacts upload \
+        --s3-region us-west-1 \
+        --target-paths build \
+        --permissions public-read \
+        jars.zip
 
 # fi

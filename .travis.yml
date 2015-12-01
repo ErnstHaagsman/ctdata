@@ -3,7 +3,5 @@ jdk:
   - openjdk7
 
 script:
-  - gradle assemble
   - gradle check
-  - gradle jar
   - ./travis-deploy.sh
