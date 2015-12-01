@@ -29,17 +29,6 @@ import java.util.concurrent.TimeoutException;
 
 @Controller
 public class IndexController {
-    AddedNode adn = new AddedNode();
-//    @RequestMapping(value = "/")
-//    public ModelAndView index() {
-//        ModelAndView mav = new ModelAndView("index/index");
-//
-//        String msg = "Running IndexController.index() method";
-//
-//        mav.addObject("msg", msg);
-//        return mav;
-//    }
-
     @RequestMapping("/")
     public String MapUI(Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
         RequestAddedNodes rn = new RequestAddedNodes();

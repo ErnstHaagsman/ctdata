@@ -26,6 +26,8 @@ dependencies {
 		exclude module: "spring-boot-starter-tomcat"
 	}
 	compile("org.springframework.boot:spring-boot-starter-jetty")
+	compile("org.springframework.boot:spring-boot-starter-websocket")
+	compile("org.springframework.boot:spring-boot-devtools")
 	// end::jetty[]
 	// tag::actuator[]
 	compile("org.springframework.boot:spring-boot-starter-actuator")
