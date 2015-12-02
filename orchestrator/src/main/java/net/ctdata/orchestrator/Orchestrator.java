@@ -21,7 +21,7 @@ public class Orchestrator {
 
         System.out.println("Orchestratation server started successfully!!");
         System.out.println("Setting up the RabbitMQ connection..");
-        final RabbitMqConnection conn = new RabbitMqConnection("amqp://localhost");
+        final RabbitMqConnection conn = new RabbitMqConnection("amqp://admin:admin@ec2-52-35-1-0.us-west-2.compute.amazonaws.com:5672/myvhost");
         System.out.println("RabbitMQ connection established..");
 
         conn.RegisterListener(new AddNodeListener() {

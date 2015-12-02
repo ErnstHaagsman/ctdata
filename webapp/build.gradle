@@ -31,7 +31,9 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-actuator")
 	// end::actuator[]
 	compile("org.thymeleaf:thymeleaf-spring4:2.1.2.RELEASE")
+
 	testCompile("junit:junit")
+
 }
 
 task wrapper(type: Wrapper) {
