@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Admin</title>
+
+</head>
+<body>
+<h1>Added Nodes</h1>
+<table>
+        <tr>
+
+        <th>URL</th>
+
+        <th>Node ID</th>
+
+        <th>Sensor ID</th>
+
+        <th>Sensor Name</th>
+
+        <th>Sensor Type</th>
+
+        <th>Last Observation</th>
+
+        <th>Polling Interval</th>
+
+            <th>Latitude</th>
+
+            <th>Longitude</th>
+
+
+    </tr>
+
+    <tr th:each="addedNode : ${addedNodes}">
+
+        <td th:text="${addedNode.url}"></td>
+
+        <td th:text="${addedNode.nodeID}"></td>
+
+        <td th:text="${addedNode.sId}"></td>
+
+        <td th:text="${addedNode.sensorName}"></td>
+
+        <td th:text="${addedNode.sensorType}"></td>
+
+        <td th:text="${addedNode.lastObservation}"></td>
+
+        <td th:text="${addedNode.pollingInterval}"></td>
+
+        <td th:text="${addedNode.latitude}"></td>
+
+        <td th:text="${addedNode.longitude}"></td>
+
+    </tr>
+
+</table>
+
+</body>
+</html>
