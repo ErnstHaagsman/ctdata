@@ -34,6 +34,7 @@ public class LiveHandler extends TextWebSocketHandler {
 
         RequestAddedNodes ran = new RequestAddedNodes();
         ran.setRequestId(UUID.randomUUID());
+        ran.setInterfaceType("public");
 
         RabbitMqConnection conn = new QueueSingleton().getConnection();
         conn.RegisterListener(new AddedNodesMetadataListener(ran.getRequestId()) {

@@ -105,7 +105,7 @@ public class MyRequestAddedNodesListener extends RequestAddedNodesListener {
                         metaSensor.setPollingInterval(eachSensor.getPollingFrequency());
                         metaSensor.setLatitude(eachSensor.getLatitude());
                         metaSensor.setLongitude(eachSensor.getLongitude());
-                        metaSensor.setLastObservation(obsConn.selectLastObservation(nodeInfo.getRaspberryNode(), eachSensor.getSensorId()));
+                        metaSensor.setLastObservation(0.0);
                         metaSensorLists.add(metaSensor);
                     }
                     metanode.setSensors(metaSensorLists);
