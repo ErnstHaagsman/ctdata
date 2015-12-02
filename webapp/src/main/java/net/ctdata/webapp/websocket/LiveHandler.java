@@ -3,52 +3,81 @@ package net.ctdata.webapp.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ctdata.common.Json.MapperSingleton;
 import net.ctdata.common.Messages.AddedNodesMetadata;
-import net.ctdata.common.Messages.Partial.SensorLastObservation;
-import net.ctdata.common.Messages.RaspberryLastObservation;
+import net.ctdata.common.Messages.HistoryRequest;
+import net.ctdata.common.Messages.HistoryResponse;
+import net.ctdata.common.Messages.RequestAddedNodes;
+import net.ctdata.common.Queue.Listeners.AddedNodesMetadataListener;
+import net.ctdata.common.Queue.Listeners.HistoryResponseListener;
 import net.ctdata.common.Queue.RabbitMqConnection;
+import net.ctdata.webapp.messages.HistoryRequestMessage;
+import net.ctdata.webapp.messages.HistoryResponseMessage;
+import net.ctdata.webapp.queue.QueueSingleton;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.TimeoutException;
+import java.util.UUID;
 
 public class LiveHandler extends TextWebSocketHandler {
 
-    private static List<WebSocketSession> sessions = new LinkedList<WebSocketSession>();
+    private static QueueForwarder forwarder = new QueueForwarder();
+
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        sessions.add(session);
-        ObjectMapper mapper = new MapperSingleton().getMapper();
-        AddedNodesMetadata anm = new AddedNodesMetadata();
-        RaspberryLastObservation rlo = new RaspberryLastObservation();
-        SensorLastObservation slo = new SensorLastObservation();
-        slo.setName("Library Rainfall");
-        slo.setSensor(1);
-        slo.setLatitude(37.335571);
-        slo.setLongitude(-121.884661);
-        slo.setLastObservation(35.82);
-        slo.setType("rainfall");
-        rlo.getSensors().add(slo);
-        anm.getRaspberryNodes().add(rlo);
-        session.sendMessage(new TextMessage(mapper.writeValueAsString(anm)));
+    public void afterConnectionEstablished(final WebSocketSession session) throws Exception {
+        forwarder.addSession(session);
+        final ObjectMapper mapper = new MapperSingleton().getMapper();
+
+        RequestAddedNodes ran = new RequestAddedNodes();
+        ran.setRequestId(UUID.randomUUID());
+
+        RabbitMqConnection conn = new QueueSingleton().getConnection();
+        conn.RegisterListener(new AddedNodesMetadataListener(ran.getRequestId()) {
+            @Override
+            public void HandleMessage(AddedNodesMetadata message) {
+                try {
+                    session.sendMessage(new TextMessage(mapper.writeValueAsString(message)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        conn.SendMessage(ran);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        sessions.remove(session);
+        forwarder.removeSession(session);
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    protected void handleTextMessage(final WebSocketSession session, TextMessage message) throws Exception {
+        final ObjectMapper mapper = new MapperSingleton().getMapper();
+        HistoryRequestMessage request = mapper.readValue(message.getPayload(), HistoryRequestMessage.class);
 
+        HistoryRequest hr = new HistoryRequest();
+        hr.setRaspberryNode(request.getRaspberryNode());
+        hr.setSensor(request.getSensorNumber());
+        hr.setTimePeriod(new Interval(DateTime.now().minusMinutes(10), DateTime.now()));
+        System.out.println("Send request " + hr.getBody());
+
+        RabbitMqConnection conn = new QueueSingleton().getConnection();
+        conn.RegisterListener(new HistoryResponseListener(hr.getRequestID()) {
+            @Override
+            public void HandleMessage(HistoryResponse message) {
+                try {
+                    HistoryResponseMessage hrm = new HistoryResponseMessage(message);
+                    session.sendMessage(new TextMessage(mapper.writeValueAsString(hrm)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        conn.SendMessage(hr);
     }
 
 

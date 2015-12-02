@@ -124,33 +124,53 @@
             case "net.ctdata.common.Messages.AddedNodesMetadata":
                 updateNodes(message.raspberryNodes);
                 break;
-
+            case "net.ctdata.webapp.messages.HistoryResponseMessage":
+                setHistory(message);
+                break;
+            case "net.ctdata.common.Messages.Observation":
+                newObservation(message);
+                break;
+            case "net.ctdata.common.Messages.Metadata":
+                addSensors(message);
+                break;
         }
     };
 
-    function updateNodes(addedNodesMetadataMessage){
-        var sensorData = [];
-        addedNodesMetadataMessage.forEach(function(node){
-            node.sensors.forEach(function(sensor){
-                sensorData.push({
-                    uuid: node.raspberryNode,
-                    number: sensor.sensor,
-                    name: sensor.name,
-                    type: sensor.type,
-                    latitude: sensor.latitude,
-                    longitude: sensor.longitude,
-                    observation: sensor.lastObservation + " mm"
-                });
-            })
-        });
+    server.onclose = function(msg) {
+        console.log('Closed?!?!?!?!?');
+    };
 
-        sensorData.forEach(function (elem) {
-            var newMarker = new SensorMarker(map, elem);
-            newMarker.onClick = sensorClickHandler;
-            markers[elem.uuid + ':' + elem.number] = newMarker;
+    function newObservation(observation){
+        var nodekey = observation.raspberryNode + ':' + observation.sensor;
+        if(!markers.hasOwnProperty(nodekey)) return;
+        markers[nodekey].new_observation((Math.round(observation.observation * 100) / 100) + " mm");
+    }
+
+    function updateNodes(addedNodesMetadataMessage){
+        addedNodesMetadataMessage.forEach(function(node){
+            addSensors(node);
         });
     }
     
+    function addSensors(nodeSensorMessage){
+        nodeSensorMessage.sensors.forEach(function(sensor){
+            var def = {
+                uuid: nodeSensorMessage.raspberryNode,
+                number: sensor.sensor,
+                name: sensor.name,
+                type: sensor.type,
+                latitude: sensor.latitude,
+                longitude: sensor.longitude,
+                observation: sensor.lastObservation + " mm"
+            };
+
+            if(markers.hasOwnProperty(def.uuid + ':' + def.number)) return;
+            var newMarker = new SensorMarker(map, def);
+            newMarker.onClick = sensorClickHandler;
+            markers[def.uuid + ':' + def.number] = newMarker;
+        })
+    }
+
     // Details window
 
     var source = $('#details-contents').html();
@@ -168,30 +188,14 @@
         $('#details-modal')
                 .modal('show');
 
-        setTimeout(function(){
-            setHistory(observation_history);
-        }, 2000);
+        server.send(JSON.stringify({
+            raspberryNode: marker.uuid,
+            sensorNumber: marker.number
+        }));
     }
 
-    window.observation_history = {
-        uuid: 'abcd',
-        number: 23,
-        observations: [
-            {
-                "time": "12/1/2015 2:30pm",
-                "observation": "24.13 mm"
-            },{
-                "time": "12/1/2015 2:35pm",
-                "observation": "27.32 mm"
-            },{
-                "time": "12/1/2015 2:30pm",
-                "observation": "30.74 mm"
-            }
-        ]
-    };
-
     function setHistory(history){
-        if(currentMarker.uuid !== history.uuid || currentMarker.number !== history.number) return;
+        if(currentMarker.uuid !== history.raspberryNode || currentMarker.number !== history.sensorNumber) return;
 
         $('#modal-contents').html(contentsTemplate({
             name: currentMarker.name,
