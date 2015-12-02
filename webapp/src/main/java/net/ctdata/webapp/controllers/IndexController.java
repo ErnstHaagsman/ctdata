@@ -29,30 +29,9 @@ import java.util.concurrent.TimeoutException;
 
 @Controller
 public class IndexController {
-    AddedNode adn = new AddedNode();
-//    @RequestMapping(value = "/")
-//    public ModelAndView index() {
-//        ModelAndView mav = new ModelAndView("index/index");
-//
-//        String msg = "Running IndexController.index() method";
-//
-//        mav.addObject("msg", msg);
-//        return mav;
-//    }
-
     @RequestMapping("/")
-    public String MapUI(Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
-        RequestAddedNodes rn = new RequestAddedNodes();
-        rn.setRequestId(UUID.randomUUID());
-        rn.setUserId("");
-        rn.setInterfaceType("Public");
-        RabbitMqConnection queueConn = new RabbitMqConnection("amqp://admin:admin@ec2-52-35-1-0.us-west-2.compute.amazonaws.com:5672/myvhost");
-        queueConn.SendMessage(rn);
-        MyObservationListener an= new MyObservationListener(UUID.randomUUID(),queueConn);
-        an.setObservations();
-        //model.addAttribute("observationsArrayList", an.getObservationsJSON());
-        model.addAttribute("observationsJSON", an.getObservationsJSON());
-        return "testMap";
+    public String MapUI(Model model){
+        return "map";
     }
 
     @RequestMapping("/index")

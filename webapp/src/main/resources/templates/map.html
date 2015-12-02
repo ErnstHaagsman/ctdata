@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>CtData - San Jose, CA Rainfall</title>
+    <style>
+        html, body, #main {
+            height: 100%;
+            margin: 0;
+        }
+
+        #main {
+            display: flex;
+            flex-flow: column;
+        }
+
+        h1 {
+            font-family: "Trebuchet MS", Arial;
+            margin-left: 2em;
+            color: #FFF;
+        }
+
+        nav {
+            min-height: 64px;
+            min-width: 100%;
+            flex: 0 1 auto;
+
+            background-color: #CA0D0D;
+        }
+
+        #map {
+            flex: 1 1 auto;
+            min-width: 100%;
+        }
+
+        .sensorlabels {
+            height: 20px;
+            width: 60px;
+            color: #FFFFFF;
+            text-align: center;
+        }
+
+        .modal-body td {
+            padding-right: 2em;
+        }
+    </style>
+    <link rel="stylesheet" href="css/bootstrap.css"/>
+</head>
+<body>
+
+<section id="main">
+
+    <nav>
+        <h1 style="color: #FFFFFF;">CtData</h1>
+    </nav>
+
+    <div id="map"></div>
+
+</section>
+
+<div class="modal fade" id="details-modal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modal-contents">
+
+        </div>
+    </div>
+</div>
+
+<script id="details-contents" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{name}}</h4>
+    </div>
+    <div class="modal-body">
+        <p>Current value: {{observation}}</p>
+        {{#if hasHistory}}
+        <table>
+            <tr>
+                <th>Time</th>
+                <th>Observation</th>
+            </tr>
+            {{#each history}}
+            <tr>
+                <td>{{time}}</td>
+                <td>{{observation}}</td>
+            </tr>
+            {{/each}}
+        </table>
+        {{else}}
+        <p>Loading history...</p>
+        {{/if}}
+    </div>
+</script>
+
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script type="text/javascript" src="js/markerwithlabel.js"></script>
+<script type="text/javascript" src="js/sensormarker.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<script type="text/javascript" src="js/handlebars.js"></script>
+<script src="//cdn.jsdelivr.net/sockjs/1.0.0/sockjs.min.js"></script>
+<script>
+
+    // Creating a new map
+    var map = new google.maps.Map(document.getElementById("map"), {
+        center: new google.maps.LatLng(37.33, -121.88),
+        zoom: 14,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    // Draw markers
+    var markers = {};
+
+    var server = new SockJS('/live');
+    server.onopen = function() {
+        console.log('open');
+    };
+
+    server.onmessage = function(msg) {
+        console.log('message', msg.data);
+        var message = JSON.parse(msg.data);
+        switch(message.messageType){
+            case "net.ctdata.common.Messages.AddedNodesMetadata":
+                updateNodes(message.raspberryNodes);
+                break;
+            case "net.ctdata.webapp.messages.HistoryResponseMessage":
+                setHistory(message);
+                break;
+            case "net.ctdata.common.Messages.Observation":
+                newObservation(message);
+                break;
+            case "net.ctdata.common.Messages.Metadata":
+                addSensors(message);
+                break;
+        }
+    };
+
+    server.onclose = function(msg) {
+        console.log('Closed?!?!?!?!?');
+    };
+
+    function newObservation(observation){
+        var nodekey = observation.raspberryNode + ':' + observation.sensor;
+        if(!markers.hasOwnProperty(nodekey)) return;
+        markers[nodekey].new_observation((Math.round(observation.observation * 100) / 100) + " mm");
+    }
+
+    function updateNodes(addedNodesMetadataMessage){
+        addedNodesMetadataMessage.forEach(function(node){
+            addSensors(node);
+        });
+    }
+    
+    function addSensors(nodeSensorMessage){
+        nodeSensorMessage.sensors.forEach(function(sensor){
+            var def = {
+                uuid: nodeSensorMessage.raspberryNode,
+                number: sensor.sensor,
+                name: sensor.name,
+                type: sensor.type,
+                latitude: sensor.latitude,
+                longitude: sensor.longitude,
+                observation: sensor.lastObservation + " mm"
+            };
+
+            if(markers.hasOwnProperty(def.uuid + ':' + def.number)) return;
+            var newMarker = new SensorMarker(map, def);
+            newMarker.onClick = sensorClickHandler;
+            markers[def.uuid + ':' + def.number] = newMarker;
+        })
+    }
+
+    // Details window
+
+    var source = $('#details-contents').html();
+    var contentsTemplate = Handlebars.compile(source);
+    var currentMarker;
+
+    function sensorClickHandler(marker) {
+        $('#modal-contents').html(contentsTemplate({
+            name: marker.name,
+            observation: marker.observation
+        }));
+
+        currentMarker = marker;
+
+        $('#details-modal')
+                .modal('show');
+
+        server.send(JSON.stringify({
+            raspberryNode: marker.uuid,
+            sensorNumber: marker.number
+        }));
+    }
+
+    function setHistory(history){
+        if(currentMarker.uuid !== history.raspberryNode || currentMarker.number !== history.sensorNumber) return;
+
+        $('#modal-contents').html(contentsTemplate({
+            name: currentMarker.name,
+            observation: currentMarker.observation,
+            hasHistory: true,
+            history: history.observations
+        }));
+    }
+
+</script>
+
+</body>
+</html>
