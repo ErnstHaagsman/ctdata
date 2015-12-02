@@ -104,7 +104,7 @@ public class SensorsConnector{
                 sensor.setType(result.getString("Type"));
                 sensor.setPollingFrequency(result.getInt("Polling_Frequency"));
                 sensor.setLongitude(result.getDouble("Longitude"));
-                sensor.setLatitude(result.getDouble("Longitude"));
+                sensor.setLatitude(result.getDouble("Latitude"));
 
                 list.add(sensor);
             }
