@@ -18,14 +18,12 @@ public class HistReq {
     public UUID getRaspberryNode() {
         return raspberryNode;
     }
-
     public void setRaspberryNode(UUID raspberryNode) {
         this.raspberryNode = raspberryNode;
     }
     public int getSensorID() {
         return sensorID;
     }
-
     public void setSensorID(int sensorID) {
         this.sensorID = sensorID;
     }
