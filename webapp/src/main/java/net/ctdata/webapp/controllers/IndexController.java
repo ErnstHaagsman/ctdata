@@ -191,7 +191,7 @@ public class IndexController {
         });
         Thread t = new Thread();
         t.sleep(6000);
-        return "historyresponse";
+        return "HistResponse";
 
     }
 
