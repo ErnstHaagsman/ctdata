@@ -11,6 +11,7 @@ import net.ctdata.common.Queue.Listeners.HistoryResponseListener;
 import net.ctdata.common.Queue.Listeners.MetadataListener;
 import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.webapp.queuelistener.MyAddedNodeRequestListener;
+import net.ctdata.webapp.queuelistener.MyHistoryResponseListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -172,6 +173,8 @@ public class IndexController {
 
         RabbitMqConnection queueConn = new RabbitMqConnection("amqp://admin:admin@ec2-52-35-1-0.us-west-2.compute.amazonaws.com:5672/myvhost");
         queueConn.SendMessage(historyRequest);
+        final MyHistoryResponseListener responseListener = new MyHistoryResponseListener(queueConn);
+        responseListener.setHistoryResponse();
         queueConn.RegisterListener(new HistoryResponseListener(UUID.randomUUID()) {
             @Override
             public void HandleMessage(HistoryResponse message) {
@@ -181,7 +184,7 @@ public class IndexController {
                 response.setSensor(message.getSensor());
                 response.setObservations(message.getObservations());
                 System.out.print("historyResponse"+response);
-                model.addAttribute("historyResponse", response);
+                model.addAttribute("historyResponse", responseListener.getHistoryResponse());
 
             }
 
