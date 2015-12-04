@@ -11,7 +11,6 @@ import net.ctdata.common.Queue.Listeners.HistoryResponseListener;
 import net.ctdata.common.Queue.Listeners.MetadataListener;
 import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.webapp.queuelistener.MyAddedNodeRequestListener;
-import net.ctdata.webapp.queuelistener.MyObservationListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -232,7 +231,7 @@ public class IndexController {
 
         });
         Thread t = new Thread();
-        t.sleep(3000);
+        t.sleep(6000);
         return "result";
     }
 
