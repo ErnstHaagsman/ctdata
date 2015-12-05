@@ -1,11 +1,10 @@
 package net.ctdata.datanode.dbconnectors;
 
-import net.ctdata.datanode.configuration.DatabaseConfiguration;
+import net.ctdata.datanode.configuration.DatanodeConfiguration;
 import net.ctdata.datanode.utility.DatanodeConstants;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
-import java.util.Properties;
 
 /**
  * Created by aditi on 14/11/15.
@@ -16,10 +15,10 @@ public class BaseDatabaseConnector implements DatabaseConnector{
 
     private static Logger logger = Logger.getLogger(BaseDatabaseConnector.class);
     private Connection conn;
-    private DatabaseConfiguration dbConfig;
+    private DatanodeConfiguration dbConfig;
     private Statement stmt;
 
-    public BaseDatabaseConnector(DatabaseConfiguration dbConfig){
+    public BaseDatabaseConnector(DatanodeConfiguration dbConfig){
         this.dbConfig = dbConfig;
     }
 

@@ -24,31 +24,13 @@ import java.util.concurrent.TimeoutException;
 
 public class SensorGateway {
     public static void main(String[] args) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
-        CommandLineParser parser = new DefaultParser();
-        Options options = CliOptions.getOptions();
-
         BasicConfigurator.configure();
 
-        GatewayConfiguration configuration = null;
+        Options options = CliOptions.getOptions();
+        GatewayConfiguration configuration = CliOptions.readOptions(args, options, "java -jar SensorGateway.jar", GatewayConfiguration.class);
 
-        try {
-            CommandLine cmd = parser.parse(options, args);
-
-            String fileName = cmd.getOptionValue(CliOptions.OPTIONS_CONFIG);
-            File configFile = new File(fileName);
-
-            ObjectMapper mapper = new MapperSingleton().getMapper();
-            configuration = mapper.readValue(configFile, GatewayConfiguration.class);
-
-        } catch (ParseException e) {
-            System.err.println("Could not parse CLI options: " + e.getMessage());
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("raspnode", options);
-            System.exit(-1);
-        } catch (IOException e) {
-            System.err.println("Could not read configuration file: " + e.getMessage());
-            System.exit(-1);
-        }
+        // To shut the compiler up
+        if(configuration == null) return;
 
 
         final RabbitMqConnection conn = new RabbitMqConnection(configuration.getRabbitMqUrl());

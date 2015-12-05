@@ -1,16 +1,13 @@
-package net.ctdata.orchestrator.config;
+package net.ctdata.common.Options;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.UUID;
-
-public class OrchestratorConfiguration {
+public class DefaultConfig {
     private final String rabbitMqUrl;
 
     @JsonCreator
-    public OrchestratorConfiguration(@JsonProperty("rabbitMqUrl") String rabbitMqUrl){
+    public DefaultConfig(@JsonProperty("rabbitMqUrl") String rabbitMqUrl){
         this.rabbitMqUrl = rabbitMqUrl;
     }
 

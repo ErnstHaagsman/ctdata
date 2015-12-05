@@ -1,0 +1,3 @@
+{
+  "rabbitMqUrl" : "amqp://localhost"
+}

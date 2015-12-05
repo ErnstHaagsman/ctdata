@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DatabaseConfiguration {
+public class DatanodeConfiguration {
     private final String databaseHost;
 
     private final String databasePort;
@@ -18,17 +18,21 @@ public class DatabaseConfiguration {
 
     private final String databaseSchema;
 
+    private final String rabbitMqUrl;
+
     @JsonCreator
-    public DatabaseConfiguration(@JsonProperty("databasehost") String databaseHost,
+    public DatanodeConfiguration(@JsonProperty("databasehost") String databaseHost,
                                  @JsonProperty("databaseport") String databasePort,
                                  @JsonProperty("databaseuser") String databaseUser,
-                                 @JsonProperty("databasepswd") String databasePswd,
+                                 @JsonProperty("databasepassword") String databasePswd,
+                                 @JsonProperty("rabbitMqUrl") String rabbitMqUrl,
                                  @JsonProperty("databaseschema") String databaseSchema) {
         this.databaseHost = databaseHost;
         this.databasePort = databasePort;
         this.databaseUser = databaseUser;
         this.databasePswd = databasePswd;
         this.databaseSchema = databaseSchema;
+        this.rabbitMqUrl = rabbitMqUrl;
     }
 
     public String getDatabaseHost() {
@@ -49,5 +53,9 @@ public class DatabaseConfiguration {
 
     public String getDatabaseSchema() {
         return databaseSchema;
+    }
+
+    public String getRabbitMqUrl() {
+        return rabbitMqUrl;
     }
 }
