@@ -41,4 +41,7 @@ public interface Sensor {
     void setType(String type);
     String getName();
     void setName(String name);
+
+    void registerChangeListener(SensorConfigurationChangedListener listener);
+    void unregisterChangeListener(SensorConfigurationChangedListener listener);
 }
