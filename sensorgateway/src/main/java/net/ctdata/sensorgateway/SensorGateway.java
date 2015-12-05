@@ -6,7 +6,7 @@ import net.ctdata.common.Messages.Connect;
 import net.ctdata.common.Messages.RequestNodes;
 import net.ctdata.common.Queue.Listeners.ConnectListener;
 import net.ctdata.common.Queue.RabbitMqConnection;
-import net.ctdata.sensorgateway.config.CliOptions;
+import net.ctdata.common.Options.CliOptions;
 import net.ctdata.sensorgateway.config.GatewayConfiguration;
 import net.ctdata.sensorgateway.websocket.RaspNodeClient;
 import org.apache.commons.cli.*;
