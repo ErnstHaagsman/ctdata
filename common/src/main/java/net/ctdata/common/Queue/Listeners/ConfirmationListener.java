@@ -16,11 +16,11 @@ public abstract class ConfirmationListener extends AbstractQueueListener<Confirm
     }
 
     /**
-     * Listens for incoming confirmations from the specified sensor
+     * Listens for incoming confirmations for the specified Raspberry Node
      */
-    public ConfirmationListener(UUID raspberryNodeId, int sensor) {
+    public ConfirmationListener(UUID raspberryNodeId) {
         super(Confirmation.class);
-        routingKey = String.format("datapoints.confirm.%s.%d", raspberryNodeId, sensor);
+        routingKey = String.format("datapoints.confirm.%s.*", raspberryNodeId);
     }
 
     @Override
