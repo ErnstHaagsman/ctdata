@@ -207,7 +207,7 @@ public class IndexController {
 
     }
 
-    @RequestMapping(value="/greeting", method=RequestMethod.POST)
+    @RequestMapping(value="/nodes", method=RequestMethod.POST)
     public String greetingSubmit(@ModelAttribute Greeting greeting, final Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException, InterruptedException {
        // model.addAttribute("greeting", greeting);
         long id = greeting.getId();
