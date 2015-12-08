@@ -24,7 +24,7 @@ public class WebApp {
 
 
     public static void main(String[] args) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException {
-        final RabbitMqConnection conn = new RabbitMqConnection("amqp://admin:admin@ec2-52-35-1-0.us-west-2.compute.amazonaws.com:5672/myvhost");
+        final RabbitMqConnection conn = new RabbitMqConnection("amqp://localhost");
         ApplicationContext ctx = SpringApplication.run(WebApp.class, args);
 
         System.out.println("Let's inspect the beans provided by Spring Boot:");

@@ -2378,6 +2378,32 @@
 				}
 			}
 		</style>
+
+		<script type="text/javascript">
+			var attempt = 3; // Variable to count number of attempts.
+			// Below function Executes on click of login button.
+			function validate(){
+				var username = document.getElementById("username").value;
+				var password = document.getElementById("password").value;
+				if ( username == "admin" && password == "admin"){
+				alert ("Login successfully");
+				window.location = "index.html"; // Redirecting to other page.
+				return false;
+			}
+			else{
+				attempt --;// Decrementing by one.
+				alert("You have left "+attempt+" attempt;");
+				// Disabling fields after 3 attempts.
+				if( attempt == 0){
+				document.getElementById("username").disabled = true;
+				document.getElementById("password").disabled = true;
+				document.getElementById("submit").disabled = true;
+				return false;
+			}
+			}
+			}
+
+		</script>
 		</head>
 <body>
 <div>
@@ -2389,17 +2415,19 @@
 					<div class="text-center">
 						<h3 class="page-header">CTData Login Page</h3>
 					</div>
+					<form id="form_id" method="post" name="myform">
 					<div class="form-group">
 						<label class="control-label">Username</label>
-						<input type="text" class="form-control" name="username" />
+						<input type="text" class="form-control" name="username" id="username" />
 					</div>
 					<div class="form-group">
 						<label class="control-label">Password</label>
-						<input type="password" class="form-control" name="password" />
+						<input type="password" class="form-control" name="password" id="password" />
 					</div>
 					<div class="text-center">
-						<a href="index.html" class="btn btn-primary">Sign in</a>
-					</div>
+						<input type="button" value="Login" id="submit" onclick="validate()"/>
+
+					</div></form>
 				</div>
 			</div>
 		</div>
