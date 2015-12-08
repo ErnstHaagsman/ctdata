@@ -18,7 +18,7 @@ public class QueueForwarder {
     private List<WebSocketSession> sessions = new LinkedList<WebSocketSession>();
 
     public QueueForwarder(){
-        conn = new QueueSingleton().getConnection();
+        conn = QueueSingleton.getConnection();
         conn.RegisterListener(new ObservationListener() {
             @Override
             public void HandleMessage(Observation message) {

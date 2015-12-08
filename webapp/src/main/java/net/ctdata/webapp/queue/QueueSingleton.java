@@ -3,12 +3,17 @@ package net.ctdata.webapp.queue;
 import net.ctdata.common.Queue.RabbitMqConnection;
 
 public class QueueSingleton {
-    private RabbitMqConnection conn;
+    private static RabbitMqConnection conn;
+    private static String rabbitMqUrl;
 
-    public RabbitMqConnection getConnection(){
+    public static void setUrl(String url){
+        rabbitMqUrl = url;
+    }
+
+    public static RabbitMqConnection getConnection(){
         if(conn == null){
             try {
-                conn = new RabbitMqConnection("amqp://admin:admin@ec2-52-35-1-0.us-west-2.compute.amazonaws.com:5672/myvhost");
+                conn = new RabbitMqConnection(rabbitMqUrl);
             } catch (Exception e) {
 
             }

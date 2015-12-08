@@ -10,6 +10,7 @@ import net.ctdata.common.Queue.Listeners.AddedNodesMetadataListener;
 import net.ctdata.common.Queue.Listeners.HistoryResponseListener;
 import net.ctdata.common.Queue.Listeners.MetadataListener;
 import net.ctdata.common.Queue.RabbitMqConnection;
+import net.ctdata.webapp.queue.QueueSingleton;
 import net.ctdata.webapp.queuelistener.MyAddedNodeRequestListener;
 import net.ctdata.webapp.queuelistener.MyHistoryResponseListener;
 import org.springframework.stereotype.Controller;
@@ -89,7 +90,7 @@ public class IndexController {
         rn.setRequestId(UUID.randomUUID());
         rn.setUserId("Administrator");
         rn.setInterfaceType("Administrator");
-        RabbitMqConnection queueConn = new RabbitMqConnection("amqp://admin:admin@ec2-52-35-1-0.us-west-2.compute.amazonaws.com:5672/myvhost");
+        RabbitMqConnection queueConn = QueueSingleton.getConnection();
         queueConn.SendMessage(rn);
         queueConn.RegisterListener(new AddedNodesMetadataListener() {
             @Override
@@ -129,7 +130,7 @@ public class IndexController {
         rn.setRequestId(UUID.randomUUID());
         rn.setUserId("");
         rn.setInterfaceType("Public");
-        RabbitMqConnection queueConn = new RabbitMqConnection("amqp://admin:admin@ec2-52-35-1-0.us-west-2.compute.amazonaws.com:5672/myvhost");
+        RabbitMqConnection queueConn = QueueSingleton.getConnection();
         queueConn.SendMessage(rn);
         queueConn.RegisterListener(new AddedNodesMetadataListener() {
             @Override
@@ -171,7 +172,7 @@ public class IndexController {
         historyRequest.setSensor(hr.getSensorID());
         historyRequest.setTimePeriod(hr.getInterval());
 
-        RabbitMqConnection queueConn = new RabbitMqConnection("amqp://admin:admin@ec2-52-35-1-0.us-west-2.compute.amazonaws.com:5672/myvhost");
+        RabbitMqConnection queueConn = QueueSingleton.getConnection();
         queueConn.SendMessage(historyRequest);
         final MyHistoryResponseListener responseListener = new MyHistoryResponseListener(queueConn);
         responseListener.setHistoryResponse();
@@ -204,7 +205,7 @@ public class IndexController {
         AddNode an =new AddNode();
         an.setNodeURL(url);
         an.setUserId("Administrator");
-        RabbitMqConnection queueConn = new RabbitMqConnection("amqp://admin:admin@ec2-52-35-1-0.us-west-2.compute.amazonaws.com:5672/myvhost");
+        RabbitMqConnection queueConn = QueueSingleton.getConnection();
         queueConn.SendMessage(an);
       //  MyAddNodeResponseListener anr= new MyAddNodeResponseListener();
 
@@ -248,7 +249,7 @@ public class IndexController {
         an.setRaspberryNode(raspberryNode);
         an.setSensor(sensor);
         an.setPollingFrequency(frequenc);
-        RabbitMqConnection queueConn = new RabbitMqConnection("amqp://admin:admin@ec2-52-35-1-0.us-west-2.compute.amazonaws.com:5672/myvhost");
+        RabbitMqConnection queueConn = QueueSingleton.getConnection();
         queueConn.SendMessage(an);
         RequestAddedNodes rn = new RequestAddedNodes();
         rn.setRequestId(UUID.randomUUID());

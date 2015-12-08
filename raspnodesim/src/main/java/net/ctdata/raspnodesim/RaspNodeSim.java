@@ -1,6 +1,6 @@
 package net.ctdata.raspnodesim;
 
-import net.ctdata.raspnodesim.config.CliOptions;
+import net.ctdata.common.Options.CliOptions;
 import net.ctdata.raspnodesim.config.NodeConfiguration;
 import net.ctdata.raspnodesim.datacollection.CollectionThread;
 import net.ctdata.raspnodesim.observationcache.CacheListener;
