@@ -4,10 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import net.ctdata.common.Messages.Abstract.AbstractMessage;
 import net.ctdata.common.Messages.Confirmation;
 import net.ctdata.common.Messages.Observation;
+import net.ctdata.common.Messages.UpdateFrequency;
 import net.ctdata.raspnodeprotocol.WebsocketMessage;
 import net.ctdata.raspnodesim.config.NodeConfiguration;
 import net.ctdata.raspnodesim.observationcache.ObservationCache;
 import net.ctdata.raspnodesim.router.DataListener;
+import net.ctdata.raspnodesim.sensors.Sensor;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -48,6 +50,16 @@ public class RaspNodeServer extends WebSocketServer implements DataListener {
             if (incoming.getClass() == Confirmation.class){
                 Confirmation confirmation = (Confirmation)incoming;
                 cache.DeleteObservation(confirmation.getSensor(), confirmation.getTime());
+            } else if (incoming.getClass() == UpdateFrequency.class){
+                UpdateFrequency updateFrequency = (UpdateFrequency)incoming;
+                for (Sensor s : configuration.getConnectedSensors()) {
+                    if (s.getNumber() == updateFrequency.getSensor()) {
+                        s.setPollingInterval(updateFrequency.getPollingFrequency());
+                        System.out.println(String.format("Set node %d to update every %d ms",
+                                updateFrequency.getSensor(),
+                                updateFrequency.getPollingFrequency()));
+                    }
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

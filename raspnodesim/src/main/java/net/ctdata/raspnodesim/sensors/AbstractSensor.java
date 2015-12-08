@@ -3,8 +3,8 @@ package net.ctdata.raspnodesim.sensors;
 import net.ctdata.common.Messages.Observation;
 import net.ctdata.common.Messages.Partial.SensorMetadata;
 import org.joda.time.DateTime;
-import org.joda.time.Period;
 
+import java.util.LinkedList;
 import java.util.UUID;
 
 public abstract class AbstractSensor implements Sensor {
@@ -16,6 +16,7 @@ public abstract class AbstractSensor implements Sensor {
     double longitude;
     String type;
     String name;
+    private LinkedList<SensorConfigurationChangedListener> changeListeners = new LinkedList<SensorConfigurationChangedListener>();
 
     public AbstractSensor(){
     }
@@ -54,6 +55,7 @@ public abstract class AbstractSensor implements Sensor {
     @Override
     public void setPollingInterval(int pollingInterval) {
         this.pollingInterval = pollingInterval;
+        notifyChangeListeners();
     }
 
     @Override
@@ -116,5 +118,20 @@ public abstract class AbstractSensor implements Sensor {
         observation.setLongitude(getLongitude());
         observation.setLatitude(getLatitude());
         return observation;
+    }
+
+    private void notifyChangeListeners(){
+        for (SensorConfigurationChangedListener listener : changeListeners)
+            if(listener != null) listener.sensorConfigurationChanged(this);
+    }
+
+    @Override
+    public void registerChangeListener(SensorConfigurationChangedListener listener) {
+        changeListeners.add(listener);
+    }
+
+    @Override
+    public void unregisterChangeListener(SensorConfigurationChangedListener listener) {
+        changeListeners.remove(listener);
     }
 }
