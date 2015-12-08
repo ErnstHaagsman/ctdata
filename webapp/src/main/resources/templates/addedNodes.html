@@ -2387,18 +2387,12 @@
 		<script>
 
 		function createDynamicURL(lat,lng)
-{
-    //The variable to be returned
-    var URL = "http://maps.google.com/maps?q=";
+		{
+			//The variable to be returned
+			var URL = "http://maps.google.com/maps?q="+lat + ","+ lng;
 
-    //Forming the variable to return
-    URL+=lat;
-    URL+=",";
-    URL+=lng;
-
-
-    return URL;
-}
+			return URL;
+		}
 
 
 		</script>
