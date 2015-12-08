@@ -13,7 +13,17 @@ public class HistReq {
 
      UUID raspberryNode;
      int sensorID;
-     Interval interval;
+     int startYear;
+    int startMonth;
+    int startDay;
+    int startHr;
+    int startMin;
+
+    int endYear;
+    int endMonth;
+    int endDay;
+    int endHr;
+    int endMin;
 
     public UUID getRaspberryNode() {
         return raspberryNode;
@@ -28,13 +38,30 @@ public class HistReq {
         this.sensorID = sensorID;
     }
 
-    public Interval getInterval() {
-        return interval;
-    }
+    public int getStartYear() { return startYear;}
+    public int getStartMonth() { return startMonth;}
+    public int getStartDay() { return startDay;}
+    public int getStartHr() { return startHr;}
+    public int getStartMin() { return startMin;}
 
-    public void setInterval(Interval timePeriod) {
-        this.interval = new Interval(timePeriod.getStart().toDateTime(DateTimeZone.UTC),
-                timePeriod.getEnd().toDateTime(DateTimeZone.UTC));
-    }
+    public int getEndYear() { return endYear;}
+    public int getEndMonth() { return endMonth;}
+    public int getEndDay() { return endDay;}
+    public int getEndHr() { return endHr;}
+    public int getEndMin() { return endMin;}
+
+    public void setStartYear(int startYear){ this.startYear = startYear;}
+    public void setStartMonth(int startMonth){ this.startMonth = startMonth;}
+    public void setStartDay(int startDay){ this.startDay = startDay;}
+    public void setStartHr(int startHr){ this.startHr = startHr;}
+    public void setStartMin(int startMin){ this.startMin = startMin;}
+
+    public void setEndYear(int endYear){ this.endYear = endYear;}
+    public void setEndMonth(int endMonth){ this.endMonth = endMonth;}
+    public void setEndDay(int endDay){ this.endDay = endDay;}
+    public void setEndHr(int endHr){ this.endHr = endHr;}
+    public void setEndMin(int endMin){ this.endMin = endMin;}
+
+
 
 }

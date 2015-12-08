@@ -2449,18 +2449,19 @@
             <div id="add-new-event">
                 <h4 class="page-header">History Request</h4>
 
-                <h2>Raspberry Node :</h2>
-                <p th:text="${historyResponse.raspberryNode}"></p><br />
 
                 <h2>Sensor ID :</h2>
-                <p th:text="${historyResponse.sensor}"></p><br />
+                <p th:text="${historyResponse.getSensor()}"></p><br />
+
+                <h2>Raspberry Node :</h2>
+                <p th:text="${historyResponse.getRaspberryNode()}"></p><br />
 
 
-                <h2>Latitude :</h2>
+                <!-- <h2>Latitude :</h2>
                 <p th:text="${historyResponse.observations.latitude}"></p><br />
 
                 <h2>Longitude :</h2>
-                <p th:text="${historyResponse.observations.longitude}"></p><br />
+                <p th:text="${historyResponse.observations.longitude}"></p><br /> -->
 
                 <table border="1" cellspacing="1" cellpadding="1">
                     <tr>

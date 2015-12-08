@@ -38,7 +38,7 @@ public class MyHistoryResponseListener extends HistoryResponseListener{
         Observation obs = new Observation();
 
 
-        response.setRaspberryNode(UUID.randomUUID());
+        response.setRaspberryNode(UUID.fromString("de305d54-75b4-431b-adb2-eb6b9e546014"));
         response.setSensor(333);
         response.setRequestId(UUID.randomUUID());
 
@@ -57,7 +57,7 @@ public class MyHistoryResponseListener extends HistoryResponseListener{
         obs.setSensor(response.getSensor());
         obs.setLatitude(37.33181);
         obs.setLongitude(-121.901206);
-        obs.setObservation(7.8);
+        obs.setObservation(33.4);
         obs.setTime(new DateTime());
         obsLinkList.add(obs);
 
@@ -67,7 +67,7 @@ public class MyHistoryResponseListener extends HistoryResponseListener{
         obs.setSensor(response.getSensor());
         obs.setLatitude(37.323144);
         obs.setLongitude(-121.94618);
-        obs.setObservation(7.8);
+        obs.setObservation(33.5);
         obs.setTime(new DateTime());
         obsLinkList.add(obs);
 
@@ -77,7 +77,7 @@ public class MyHistoryResponseListener extends HistoryResponseListener{
         obs.setSensor(response.getSensor());
         obs.setLatitude(37.2993);
         obs.setLongitude(-121.90210);
-        obs.setObservation(7.8);
+        obs.setObservation(33.6);
         obs.setTime(new DateTime());
         obsLinkList.add(obs);
 
@@ -87,7 +87,7 @@ public class MyHistoryResponseListener extends HistoryResponseListener{
         obs.setSensor(response.getSensor());
         obs.setLatitude(37.33590);
         obs.setLongitude(-121.90026);
-        obs.setObservation(7.8);
+        obs.setObservation(33.5);
         obs.setTime(new DateTime());
         obsLinkList.add(obs);
 
@@ -97,7 +97,7 @@ public class MyHistoryResponseListener extends HistoryResponseListener{
         obs.setSensor(response.getSensor());
         obs.setLatitude(37.33512);
         obs.setLongitude(-121.88554);
-        obs.setObservation(7.8);
+        obs.setObservation(33.5);
         obs.setTime(new DateTime());
         obsLinkList.add(obs);
 
@@ -110,7 +110,7 @@ public class MyHistoryResponseListener extends HistoryResponseListener{
             e.printStackTrace();
         }
 
-        System.out.println("json string : "+ responseJSON);
+        //System.out.println("linklist string : "+ obsLinkList);
 
     }
 
