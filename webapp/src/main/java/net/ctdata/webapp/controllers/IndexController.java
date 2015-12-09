@@ -45,7 +45,7 @@ public class IndexController {
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
     public String login(Model model) {
-        model.addAttribute("message", "HELLO!");
+        //model.addAttribute("message", "HELLO!");
         return "page_login";
     }
 
