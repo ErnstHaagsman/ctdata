@@ -2384,7 +2384,6 @@
 				}
 			}
 		</style>
-
 	</head>
 <body>
 <!--Start Header-->
@@ -2444,7 +2443,7 @@
 					</a>
 				</li>
 				<li class="dropdown">
-					<a href="testMap" class="dropdown-toggle">
+					<a href="map" class="dropdown-toggle">
 						<i class="fa fa-map-marker"></i>
 						<span class="hidden-xs">Maps</span>
 					</a>
@@ -2491,19 +2490,18 @@
 							<th>Sensor Type</th>
 							<th>Last Observation</th>
 							<th>Polling Interval</th>
-							<th>Latitude</th>
-							<th>Longitude</th>
+							<th>Location</th>
+
 						</tr>
 					</thead>
 					<tbody>
-						 <tr th:each="addedNode : ${addedNodes}">
-						<td th:text="${addedNode.url}"></td>
-						<td th:text="${addedNode.sensorName}"></td>
-						<td th:text="${addedNode.sensorType}"></td>
-						<td th:text="${addedNode.lastObservation}"></td>
-						<td th:text="${addedNode.pollingInterval}"></td>
-						<td th:text="${addedNode.latitude}"></td>
-						<td th:text="${addedNode.longitude}"></td>
+					 	<tr th:each="addedNode : ${addedNodes}">
+							<td th:text="${addedNode.url}"></td>
+							<td th:text="${addedNode.sensorName}"></td>
+							<td th:text="${addedNode.sensorType}"></td>
+							<td th:text="${addedNode.lastObservation}"></td>
+							<td th:text="${addedNode.pollingInterval}"></td>
+							<td><a th:href="@{http://maps.google.com/maps(q='loc:'+${addedNode.latitude}+','+${addedNode.longitude})}" >Display on map </a></td>
 						</tr>
 					</tbody>
 				</table>

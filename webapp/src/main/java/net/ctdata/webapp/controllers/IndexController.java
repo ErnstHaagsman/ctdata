@@ -13,6 +13,8 @@ import net.ctdata.common.Queue.RabbitMqConnection;
 import net.ctdata.webapp.queue.QueueSingleton;
 import net.ctdata.webapp.queuelistener.MyAddedNodeRequestListener;
 import net.ctdata.webapp.queuelistener.MyHistoryResponseListener;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -43,7 +45,7 @@ public class IndexController {
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
     public String login(Model model) {
-        model.addAttribute("message", "HELLO!");
+        //model.addAttribute("message", "HELLO!");
         return "page_login";
     }
 
@@ -164,39 +166,48 @@ public class IndexController {
         return "testMap";
     }
 
-    @RequestMapping(value="/historyresponse", method=RequestMethod.POST)
+    @RequestMapping(value="/HistResponse", method=RequestMethod.POST)
     public String historyReqSubmit(@ModelAttribute HistReq hr, final Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException, InterruptedException {
 
         HistoryRequest historyRequest = new HistoryRequest();
         historyRequest.setRaspberryNode(hr.getRaspberryNode());
         historyRequest.setSensor(hr.getSensorID());
-        historyRequest.setTimePeriod(hr.getInterval());
+        System.out.println("startYear- "+ hr.getStartYear());
+        System.out.println("startMonth- "+ hr.getStartMonth());
+        DateTime start = new DateTime(hr.getStartYear(), hr.getStartMonth(), hr.getStartDay(), hr.getStartHr(), hr.getStartMin(), 0, 0);
+        DateTime end = new DateTime(hr.getEndYear(), hr.getEndMonth(), hr.getEndDay(), hr.getEndHr(), hr.getEndMin(), 0, 0);
+        System.out.println("start time - "+start);
+        System.out.println("end time - "+end);
+        Interval interval = new Interval(start, end);
+        historyRequest.setTimePeriod(interval);
 
         RabbitMqConnection queueConn = QueueSingleton.getConnection();
         queueConn.SendMessage(historyRequest);
         final MyHistoryResponseListener responseListener = new MyHistoryResponseListener(queueConn);
-        responseListener.setHistoryResponse();
-        queueConn.RegisterListener(new HistoryResponseListener(UUID.randomUUID()) {
+        //responseListener.setHistoryResponse();
+        queueConn.RegisterListener(new HistoryResponseListener(historyRequest.getRequestID()) {
             @Override
             public void HandleMessage(HistoryResponse message) {
+                System.out.println("inside handle message...");
                 HistoryResponse response = new HistoryResponse();
                 response.setRequestId(message.getRequestId());
                 response.setRaspberryNode(message.getRaspberryNode());
                 response.setSensor(message.getSensor());
                 response.setObservations(message.getObservations());
                 System.out.print("historyResponse"+response);
-                model.addAttribute("historyResponse", responseListener.getHistoryResponse());
+                model.addAttribute("historyResponse", response);
 
             }
 
         });
         Thread t = new Thread();
         t.sleep(6000);
+        //model.addAttribute("historyResponse", responseListener.getHistoryResponse());
         return "HistResponse";
 
     }
 
-    @RequestMapping(value="/greeting", method=RequestMethod.POST)
+    @RequestMapping(value="/nodes", method=RequestMethod.POST)
     public String greetingSubmit(@ModelAttribute Greeting greeting, final Model model) throws URISyntaxException, KeyManagementException, TimeoutException, NoSuchAlgorithmException, IOException, InterruptedException {
        // model.addAttribute("greeting", greeting);
         long id = greeting.getId();

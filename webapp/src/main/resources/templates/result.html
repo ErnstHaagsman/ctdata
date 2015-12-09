@@ -2444,7 +2444,7 @@
                     </a>
                 </li>
                 <li class="dropdown">
-                    <a href="testMap" class="dropdown-toggle">
+                    <a href="map" class="dropdown-toggle">
                         <i class="fa fa-map-marker"></i>
                         <span class="hidden-xs">Maps</span>
                     </a>
@@ -2455,7 +2455,6 @@
                         <span class="hidden-xs">Change Frequency</span>
                     </a>
                 </li>
-
             </ul>
         </div>
         <!--Start Content-->
@@ -2494,8 +2493,8 @@
                                     <th>Sensor Name</th>
                                     <th>Sensor Type</th>
                                     <th>Polling Interval</th>
-                                    <th>Latitude</th>
-                                    <th>Longitude</th>
+                                    <th>Location</th>
+
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -2504,8 +2503,7 @@
                                     <td th:text="${addedNode.sensorName}"></td>
                                     <td th:text="${addedNode.sensorType}"></td>
                                     <td th:text="${addedNode.pollingInterval}"></td>
-                                    <td th:text="${addedNode.latitude}"></td>
-                                    <td th:text="${addedNode.longitude}"></td>
+                                    <td> <a href="javascript:window.location=createDynamicURL(\'' + ${addedNode.latitude} +'\',\''+ ${addedNode.longitude} + '\');" >Display on map </a></td>
                                 </tr>
                                 </tbody>
                             </table>
