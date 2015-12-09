@@ -20,6 +20,12 @@ build target to only build a single module:
 
 Declare all dependencies in your module's build.gradle.
 
+Deployment
+----------
+
+Use the docker-compose configuration available from the [ctdata-docker](https://github.com/ErnstHaagsman/ctdata-docker)
+repository.
+
 Package Naming
 --------------
 
