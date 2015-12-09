@@ -5,15 +5,17 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.TimeZone;
+
 public class ObservationMessage {
     private String time;
-    private double observation;
+    private String observation;
     private final DateTimeFormatter formatter;
 
     public ObservationMessage(Observation observation){
         formatter = DateTimeFormat.mediumDateTime();
-        this.time = observation.getTime().toString(formatter.withZone(DateTimeZone.getDefault()));
-        this.observation = observation.getObservation();
+        this.time = observation.getTime().toString(formatter.withZone(DateTimeZone.forTimeZone(TimeZone.getTimeZone("America/Los_Angeles"))));
+        this.observation = String.format("%.2f mm", observation.getObservation());
     }
 
     public String getTime() {
@@ -24,11 +26,11 @@ public class ObservationMessage {
         this.time = time;
     }
 
-    public double getObservation() {
+    public String getObservation() {
         return observation;
     }
 
-    public void setObservation(double observation) {
+    public void setObservation(String observation) {
         this.observation = observation;
     }
 }
