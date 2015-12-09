@@ -2508,15 +2508,13 @@
 						</tr>
 					</thead>
 					<tbody>
-						 <tr th:each="addedNode : ${addedNodes}">
-						<td th:text="${addedNode.url}"></td>
-						<td th:text="${addedNode.sensorName}"></td>
-						<td th:text="${addedNode.sensorType}"></td>
-						<td th:text="${addedNode.lastObservation}"></td>
-						<td th:text="${addedNode.pollingInterval}"></td>
-						<td> <a href="javascript:window.location=createDynamicURL(\'' + ${addedNode.latitude} +'\',\''+ ${addedNode.longitude} + '\');" >Display on map </a></td>
-						<!--<td th:text="${addedNode.latitude}"></td>
-						<td th:text="${addedNode.longitude}"></td> -->
+					 	<tr th:each="addedNode : ${addedNodes}">
+							<td th:text="${addedNode.url}"></td>
+							<td th:text="${addedNode.sensorName}"></td>
+							<td th:text="${addedNode.sensorType}"></td>
+							<td th:text="${addedNode.lastObservation}"></td>
+							<td th:text="${addedNode.pollingInterval}"></td>
+							<td><a th:href="@{http://maps.google.com/maps(q='loc:'+${addedNode.latitude}+','+${addedNode.longitude})}" >Display on map </a></td>
 						</tr>
 					</tbody>
 				</table>
